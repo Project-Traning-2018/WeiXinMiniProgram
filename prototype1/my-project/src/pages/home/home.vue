@@ -62,7 +62,9 @@
     position: fixed;
     left: 50%;
     bottom: 50rpx;
-    background-color: #2C8DF6
+    background-color: #2C8DF6;
+    line-height: 90rpx;
+    color: #ffffff;
   }
   cover-view {
     position: fixed;
