@@ -19,7 +19,7 @@
     <!--</form>-->
     <cover-view>
       <button @tap="handleTap">
-        发起投票
+        创建报名
       </button>
     </cover-view>
     <!--地址描述经纬度展示-->
@@ -38,6 +38,36 @@
       handleTap() {
         console.log("Tapped!")
       }
+    },
+    onLoad(){
+      console.log('Created')
+      let that = this
+      let myPoi = {}
+
+      wx.getLocation({
+        type: 'gcj02',
+        success(res){
+          console.log(res)
+          myPoi = res
+
+          console.log(this)
+
+          that.qqmapsdk.reverseGeocoder({
+            location: {
+              latitude: myPoi.latitude,
+              longitude: myPoi.longitude
+            },
+            success(res) {
+              console.log(res)
+            }
+          })
+        }
+      })
+
+
+    },
+    mounted() {
+      console.log("Mounted")
     }
   }
 
