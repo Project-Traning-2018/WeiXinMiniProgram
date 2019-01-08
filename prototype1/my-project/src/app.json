@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/home/main",
+    "pages/index/main",
+    "pages/logs/main"  ],
+  "tabBar": {
+    "color": "#ccc",
+    "selectedColor": "#2C8DF6",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "positon": "bottom",
+    "list": [
+      {
+        "pagePath": "pages/home/main",
+        "text": "创建报名",
+        "iconPath": "static/images/add_0.png",
+        "selectedIconPath": "static/images/add_1.png"
+      },
+      {
+        "pagePath": "pages/index/main",
+        "text": "我的报名",
+        "iconPath": "static/images/my_0.png",
+        "selectedIconPath": "static/images/my_1.png"
+      },
+      {
+        "pagePath": "pages/logs/main",
+        "text": "个人中心",
+        "iconPath": "static/images/user_0.png",
+        "selectedIconPath": "static/images/user_1.png"
+      }
+
+    ]
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  }
+}
