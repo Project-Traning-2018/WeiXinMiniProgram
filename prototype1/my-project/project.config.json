@@ -11,7 +11,7 @@
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
 	"appid": "wx0a526d5921db97d6",
-	"projectname": "prototype1",
+	"projectname": "prototype2",
 	"condition": {
 		"search": {
 			"current": -1,
