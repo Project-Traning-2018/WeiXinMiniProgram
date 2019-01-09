@@ -1,9 +1,12 @@
 {
   "pages": [
+    "pages/login/main",
+    "pages/user/main",
     "pages/home/main",
     "pages/index/main",
     "pages/logs/main",
-    "pages/user/main"  ],
+    "pages/suggestion/main"
+  ],
   "tabBar": {
     "color": "#ccc",
     "selectedColor": "#2C8DF6",

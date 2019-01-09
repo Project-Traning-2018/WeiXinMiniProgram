@@ -57,9 +57,9 @@
       wx.getLocation({
         type: 'gcj02',
         success(res) {
-          console.log(res)
+          console.log("位置信息："+res)
           myPoi = res
-          console.log(this)
+          console.log(that)
           that.qqmapsdk.reverseGeocoder({
             location: {
               latitude: myPoi.latitude,
@@ -69,7 +69,6 @@
               console.log(res)
               that.latitude = myPoi.latitude
               that.longitude = myPoi.longitude
-              console.log(that)
               that.markers = [
                 {
                   id: 0,
@@ -137,6 +136,7 @@
                 wx.openSetting({
                   success(res) {
                     if (res.authSetting["scope.userInfo"]) {////如果用户重新同意了授权登录
+                      console.log(`获得了用户的userinfo`)
                       wx.getUserInfo({
                         success: function (res) {
                           var userInfo = res.userInfo;
