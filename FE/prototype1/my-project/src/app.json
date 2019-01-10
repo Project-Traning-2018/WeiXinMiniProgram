@@ -5,7 +5,8 @@
     "pages/user/main",
     "pages/home/main",
     "pages/index/main",
-    "pages/suggestion/main"
+    "pages/suggestion/main",
+    "pages/logs/main"
   ],
   "tabBar": {
     "color": "#ccc",

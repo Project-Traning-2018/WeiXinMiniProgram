@@ -4,9 +4,10 @@
 		"urlCheck": false,
 		"es6": false,
 		"postcss": true,
-		"minified": false,
+		"minified": true,
 		"newFeature": true,
-		"autoAudits": false
+		"autoAudits": false,
+		"uglifyFileName": true
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
