@@ -6,16 +6,17 @@
       }
     },
     created() {
-      // 调用API从本地缓存中获取数据
-      const logs = wx.getStorageSync('logs') || []
-      logs.unshift(Date.now())
-      wx.setStorageSync('logs', logs)
-
-      // console.log('app created and cache logs by setStorageSync')
+      // // 调用API从本地缓存中获取数据
+      // const my = wx.getStorageSync('my') || []
+      // my.unshift(Date.now())
+      // wx.setStorageSync('my', my)
+      //
+      // // console.log('app created and cache my by setStorageSync')
       let response
       let that = this
       wx.login({
         success(res) {
+          console.log('第一次请求数据')
           console.log(res)
           response = res
           that.$fly.get({
@@ -48,5 +49,10 @@
     -moz-transition: width 2s;
     -webkit-transition: width 2s;
     -o-transition: width 2s;
+  }
+
+  page {
+    width: 100%;
+    height: 100%;
   }
 </style>

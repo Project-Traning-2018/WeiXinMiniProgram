@@ -27,7 +27,9 @@
               body: JSON.stringify(data2send)
             }).then(function(res){
               console.log(res.data.data)
-            })
+            }).then(
+              this.content = ''
+            )
           }
       }
     }

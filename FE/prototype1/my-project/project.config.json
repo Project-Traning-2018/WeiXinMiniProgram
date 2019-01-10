@@ -4,7 +4,7 @@
 		"urlCheck": false,
 		"es6": false,
 		"postcss": true,
-		"minified": true,
+		"minified": false,
 		"newFeature": true,
 		"autoAudits": false
 	},
@@ -12,6 +12,7 @@
 	"compileType": "miniprogram",
 	"appid": "wx0a526d5921db97d6",
 	"projectname": "prototype2",
+	"libVersion": "2.5.0",
 	"condition": {
 		"search": {
 			"current": -1,

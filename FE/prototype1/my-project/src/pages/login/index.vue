@@ -19,12 +19,11 @@
     name: "index",
     data() {
       return {
-        userInfo: {},
+        userInfo: {}, // 初始数据
         isShow: false // 没有授权
       }
     },
     beforeMount() {
-      console.log('---beforeMount---');
       // 获取用户登录信息
       this.handleGetUserInfo();
     },
@@ -44,6 +43,7 @@
               userIcon: "this",
               userPhonenumber: ''
             }
+            console.log(JSON.stringify(data2send))
             that.$fly.interceptors.request.use((request) => {
               request.headers = {
                 'Content-Type': 'application/json'
@@ -56,20 +56,20 @@
             }).then(function(res){
               console.log(res.data.data)
             })
+            this.isShow = true;
           },
           fail: () => {
-            console.log('获取失败');
+            console.log('*****获取失败*****');
           }
         });
       },
 
       getUserInfo(data){
-        console.log('46' + data);
+        console.log('46' + JSON.stringify(data));
         // 判断用户是否授权
         if (data.mp.detail.rawData) {
           // 用户授权
           this.handleGetUserInfo();
-          this.isShow = true;
         }
       },
 

@@ -164,11 +164,6 @@
 </script>
 
 <style scoped>
-  page {
-    height: 100%;
-    width: 100%;
-  }
-
   #container,
   #myMap {
     height: 100%;

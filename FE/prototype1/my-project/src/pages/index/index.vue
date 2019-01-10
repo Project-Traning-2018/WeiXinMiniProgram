@@ -38,7 +38,7 @@ export default {
 
   methods: {
     bindViewTap () {
-      const url = '../logs/main'
+      const url = '../my/main'
       wx.navigateTo({ url })
     },
     getUserInfo () {
@@ -76,6 +76,7 @@ export default {
   width: 128rpx;
   height: 128rpx;
   margin: 20rpx;
+
   border-radius: 50%;
 }
 

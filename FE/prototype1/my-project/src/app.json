@@ -1,10 +1,10 @@
 {
   "pages": [
     "pages/login/main",
+    "pages/my/main",
     "pages/user/main",
     "pages/home/main",
     "pages/index/main",
-    "pages/logs/main",
     "pages/suggestion/main"
   ],
   "tabBar": {
@@ -21,7 +21,7 @@
         "selectedIconPath": "static/images/add_1.png"
       },
       {
-        "pagePath": "pages/index/main",
+        "pagePath": "pages/my/main",
         "text": "我的报名",
         "iconPath": "static/images/my_0.png",
         "selectedIconPath": "static/images/my_1.png"
