@@ -21,5 +21,4 @@ public class InfoMd5 {
         String base = openId + sessonKey + "/"+slat;
         return DigestUtils.md5DigestAsHex( base.getBytes() );
     }
-
 }

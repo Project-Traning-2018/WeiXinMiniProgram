@@ -31,15 +31,15 @@ create table `activity_info`(
     `activity_enddate` datetime not null comment '活动结束时间',
     `activity_fee` int comment '活动费用',
     `activity_peoplelimit` int not null comment '活动总人数',
-    `activity_peopleregistered` int not null comment '活动已报名人数',
+    `activity_peopleregistered` int not null default 0 comment '活动已报名人数',
     `activity_address` varchar(1024) not null comment '活动地址',
     `activity_addressname` varchar(1024) not null comment '活动地址名称',
-    `activity_longitude` decimal(10,10) not null comment '活动地址经度',
-    `activity_latitude`  decimal(10,10) not null comment '活动地址纬度',
+    `activity_longitude` decimal(20,10) not null comment '活动地址经度',
+    `activity_latitude`  decimal(20,10) not null comment '活动地址纬度',
     `activity_organizer` varchar(512) not null comment '活动组织者姓名',
     `activity_organizerphonenumber` varchar(32) comment '活动组织者手机号',
     `activity_organizerid` varchar(64) not null comment '活动组织者openid',
-    `activity_valid` int not null comment '活动有效性',
+    `activity_valid` int not null default 0 comment '活动有效性',
     primary key( `activity_id` )
 );
 

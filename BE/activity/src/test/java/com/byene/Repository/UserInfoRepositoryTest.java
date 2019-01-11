@@ -34,8 +34,8 @@ public class UserInfoRepositoryTest {
         String key = "test";
 
         WxInfo wxInfo = new WxInfo();
-        wxInfo.setOpenid( "test" );
-        wxInfo.setSession_key( "test" );
+        wxInfo.setOpenid( "byene" );
+        wxInfo.setSession_key( "byene" );
         StrRedis.opsForValue().set( key, JsonUtils.objectToJson( wxInfo ),60*100, TimeUnit.SECONDS );
 
         String key1 = "test1";

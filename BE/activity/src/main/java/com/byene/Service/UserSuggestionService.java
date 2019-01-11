@@ -13,7 +13,7 @@ public interface UserSuggestionService {
     /*保存用户建议*/
     void save( UserSuggestion userSuggestion );
 
-    /*根据用户Id删除用户信息*/
+    /*根据用户Id删除用户建议信息*/
     void deleteById( String userId );
 
     void delete( Integer suggestionId );
