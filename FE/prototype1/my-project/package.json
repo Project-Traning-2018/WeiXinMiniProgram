@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "escape-string-regexp": "^1.0.5",
+    "flyio": "^0.6.9",
     "mpvue": "^1.0.11"
   },
   "devDependencies": {
