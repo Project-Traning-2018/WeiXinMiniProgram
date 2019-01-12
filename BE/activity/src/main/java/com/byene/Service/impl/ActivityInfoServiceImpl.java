@@ -37,4 +37,17 @@ public class ActivityInfoServiceImpl implements ActivityInfoService {
     public List<ActivityInfo> FindAllbyId(String userId) {
         return activityInfoRepository.findAllByActivityOrganizeridIn( userId );
     }
+
+    @Override
+    @Transactional
+    public ActivityInfo FindOnebyId(Integer activityId) {
+        return activityInfoRepository.getOne( activityId );
+    }
+
+    @Override
+    public void delete(Integer activityId) {
+
+        ActivityInfo activityInfo = activityInfoRepository.getOne( activityId );
+        activityInfoRepository.delete( activityInfo );
+    }
 }
