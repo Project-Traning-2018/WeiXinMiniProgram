@@ -16,6 +16,12 @@ public interface ActivityInfoService {
     /*查看全部活动**/
     List<ActivityInfo> findall( );
 
-    /*查看已发布活动**/
+    /*根据活动删除活动**/
+    void delete( Integer activityId );
+
+    /*查看用户已发布活动**/
     List<ActivityInfo> FindAllbyId( String userId );
+
+    /*根据活动Id查询活动*/
+    ActivityInfo FindOnebyId( Integer activityId );
 }

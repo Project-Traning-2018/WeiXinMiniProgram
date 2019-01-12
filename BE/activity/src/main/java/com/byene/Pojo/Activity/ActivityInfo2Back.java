@@ -1,4 +1,4 @@
-package com.byene.Pojo;
+package com.byene.Pojo.Activity;
 
 import lombok.Data;
 
