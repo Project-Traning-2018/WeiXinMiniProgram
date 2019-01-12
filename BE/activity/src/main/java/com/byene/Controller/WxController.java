@@ -91,8 +91,8 @@ public class WxController {
         userInfoService.save( userInfo );
 
         /*返回用户信息更新成功*/
-        resultVO.setCode( WxInfoStausEnum.WX_UPPDATE.getCode() );
-        resultVO.setMsg( WxInfoStausEnum.WX_UPPDATE.getMessage() );
+        resultVO.setCode( WxInfoStausEnum.WX_UPDATE.getCode() );
+        resultVO.setMsg( WxInfoStausEnum.WX_UPDATE.getMessage() );
         return resultVO;
     }
 }

@@ -56,8 +56,8 @@ public class SuggestionController {
 
         userSuggestionService.save( userSuggestion );
         /*返回用户建议提交成功*/
-        resultVO.setCode( WxInfoStausEnum.SUGGESTION_SUECCESS.getCode() );
-        resultVO.setMsg( WxInfoStausEnum.SUGGESTION_SUECCESS.getMessage() );
+        resultVO.setCode( WxInfoStausEnum.SUGGESTION_SUCCESS.getCode() );
+        resultVO.setMsg( WxInfoStausEnum.SUGGESTION_SUCCESS.getMessage() );
         return resultVO;
     }
 

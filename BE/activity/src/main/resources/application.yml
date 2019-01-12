@@ -22,3 +22,7 @@ spring:
 wx:
  appid: wx0a526d5921db97d6
  secret: 90c1b88c5c951c54c5241b2816d898d1
+
+supermanager:
+  account: root
+  password: activity103

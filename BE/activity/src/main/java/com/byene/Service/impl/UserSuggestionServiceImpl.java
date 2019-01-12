@@ -24,7 +24,7 @@ public class UserSuggestionServiceImpl implements UserSuggestionService {
     @Autowired
     UserSuggestionRepository userSuggestionRepository;
 
-    private static SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
+    //private static SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
 
     @Override
     @Transactional

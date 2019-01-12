@@ -20,7 +20,7 @@ public interface UserInfoService {
     UserInfo FindOneById( String userId );
 
     /*查询所有用户信息*/
-    List< UserInfo > FindAll();
+    public List<UserInfo> FindAll( );
 
     /*分页查询所有用户信息*/
     List< UserInfo > FindAllbyPage( Integer Page, Integer Size );
