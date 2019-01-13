@@ -12,7 +12,7 @@
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
 	"appid": "wx0a526d5921db97d6",
-	"projectname": "prototype2",
+	"projectname": "prototype3",
 	"libVersion": "2.5.0",
 	"condition": {
 		"search": {

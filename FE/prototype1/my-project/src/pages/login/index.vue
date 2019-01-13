@@ -33,10 +33,9 @@
         let that = this
         wx.getUserInfo({
           success: (data)=>{
-            console.log('data:' +JSON.stringify(data));
-            console.log(this)
+            // console.log('data:' +JSON.stringify(data));
             this.userInfo = data.userInfo;
-            console.log('id'+that.globalData.id)
+            console.log('id: '+that.globalData.id)
             let data2send = {
               userIdMd5 : that.globalData.id,
               userName: this.userInfo.nickName,
@@ -54,7 +53,7 @@
               url: 'http://activity103.mynatapp.cc/wx/wxuserinfo',/*contentType: 'application/json;charset=utf-8',*/
               body: JSON.stringify(data2send)
             }).then(function(res){
-              console.log(res.data.data)
+              console.log(res.data)
             })
             this.isShow = true;
           },

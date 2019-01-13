@@ -11,7 +11,7 @@
          scale='16' show-location>
     </map>
     <cover-view>
-      <button @tap="handleTap">
+      <button @tap="handleNew">
         创建报名
       </button>
     </cover-view>
@@ -46,20 +46,44 @@
       }
     },
     methods: {
-      handleTap() {
-        console.log("Tapped!")
+      handleNew() {
+        wx.navigateTo({
+          url: '../newActivity/main'
+        })
       }
     },
     beforeCreate() {
-      console.log('Created')
       let that = this
       let myPoi = {}
       wx.getLocation({
         type: 'gcj02',
         success(res) {
-          console.log("位置信息："+res)
+          console.log("位置信息：")
+          console.log(res)
           myPoi = res
-          console.log(that)
+
+          /* 获取附件2km内的活动 */
+          let data2Send = {
+            'userIdMd5': 'jiguochang',
+            'activityAddress': 'myAddress',
+            'activityAddressname': 'myAddressName',
+            'activityLatitude': myPoi.latitude,
+            'activityLongitude': myPoi.longitude
+          }
+          that.$fly.interceptors.request.use((request) => {
+            request.headers = {
+              'Content-Type': 'application/json'
+            };
+          })
+          that.$fly.get({
+            method: 'POST',
+            url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/listbyid'+'?userKey='+'jiguochang',/*contentType: 'application/json;charset=utf-8',*/
+            // body: JSON.stringify(data2send)
+          }).then(function(res){
+            console.log(res.data)
+            // res = markers
+          })
+
           that.qqmapsdk.reverseGeocoder({
             location: {
               latitude: myPoi.latitude,
@@ -155,7 +179,6 @@
           })
         },
         mounted() {
-          console.log("Mounted")
         }
       })
       this.mapCtx = wx.createMapContext('qqMap');
@@ -171,21 +194,21 @@
   }
 
   button {
-    width: 550 rpx;
-    height: 90 rpx;
-    margin-left: -275 rpx;
+    width: 550rpx;
+    height: 90rpx;
+    margin-left: -275rpx;
     position: fixed;
     left: 50%;
-    bottom: 50 rpx;
+    bottom: 50rpx;
     background-color: #2C8DF6;
-    line-height: 90 rpx;
+    line-height: 90rpx;
     color: #ffffff;
   }
 
   cover-view {
     position: fixed;
-    width: 750 rpx;
-    height: 200 rpx;
+    width: 750rpx;
+    height: 200rpx;
     bottom: 0;
   }
 </style>

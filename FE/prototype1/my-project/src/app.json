@@ -1,7 +1,8 @@
 {
   "pages": [
-    "pages/login/main",
     "pages/my/main",
+    "pages/login/main",
+    "pages/newActivity/main",
     "pages/user/main",
     "pages/home/main",
     "pages/index/main",

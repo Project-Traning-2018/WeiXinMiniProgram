@@ -16,39 +16,48 @@
         我收藏的
       </div>
     </div>
-    <swiper :current="current" duration="250" @change="handleChange">
+    <swiper :current="current" duration="150" @change="handleChange">
       <swiper-item>
-        <div class="card">
-          <p>标题</p>
-          <p>地点</p>
-          <p>事件</p>
+        <div class="card" v-for="act in actLaunByme">
+          <p class="title">{{act.activitySubject}}</p>
+          <p><span>地点</span><span>{{act.activityAddressname}}</span></p>
+          <p><span>类别</span><span>{{act.activityType}}</span></p>
+          <p><span>报名时间</span><span>{{act.activityType}}</span></p>
+          <p><span>报名活动</span><span>{{act.activityType}}</span></p>
         </div>
         <div class="card">
-          <p>标题</p>
-          <p>地点</p>
-          <p>事件</p>
+          <p class="title">标题</p>
+          <p><span class="key">地点</span><span class="value">55555555555</span></p>
+          <p><span class="key">类别</span><span class="value">4565698</span></p>
+          <p><span class="key">报名时间</span><span class="value">5465555</span></p>
+          <p><span class="key">报名活动</span><span class="value">"1234561"</span></p>
         </div>
         <div class="card">
-          <p>标题</p>
+          <p class="title">标题</p>
           <p>地点</p>
-          <p>事件</p>
+          <p>时间</p>
         </div>
         <div class="card">
-          <p>标题</p>
+          <p class="title">标题</p>
           <p>地点</p>
-          <p>事件</p>
+          <p>时间</p>
         </div>
         <div class="card">
-          <p>标题</p>
+          <p  class="title">标题</p>
           <p>地点</p>
-          <p>事件</p>
+          <p>时间</p>
+        </div>
+        <div class="card">
+          <p class="title">标题</p>
+          <p>地点</p>
+          <p>时间</p>
         </div>
       </swiper-item>
       <swiper-item>
         <div class="card">
           <p>标题</p>
           <p>地点</p>
-          <p>事件</p>
+          <p>时间</p>
         </div>
       </swiper-item>
       <swiper-item>
@@ -77,6 +86,9 @@
         tab0: 0,
         tab1: 1,
         tab2: 2,
+        actLaunByme: [], // 我发起的活动列表
+        actPartByme: [], // 我参与的活动列表
+        actCollByme: [], // 我收藏的活动列表
       }
     },
     methods: {
@@ -93,6 +105,29 @@
         console.log('tapIndex: '+tapIndex + ' activeIndex: '+ this.activeIndex+' current: '+this.current)
       },
     },
+    onLoad() {
+      /* 保存对this(Vue实例)的引用 */
+      let that = this
+      /* 设置加载动画 */
+      // wx.showLoading({
+      //   mask: true,
+      //   title: '加载中'
+      // })
+      /*promise*/
+      this.$fly.get({
+        method: 'POST',
+        url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/listbyid'+'?userKey='+'jiguochang',/*contentType: 'application/json;charset=utf-8',*/
+        // body: JSON.stringify(data2send)
+      }).then(function(res){
+        console.log(res.data)
+        return that.$fly.get({
+          method: 'POST',
+          url: 'xxx'
+        })
+      }).then(function (res) {
+        
+      })
+    }
   }
 </script>
 
@@ -122,14 +157,13 @@
   swiper {
     height: calc(100% - 140rpx);
     /*box-sizing: border-box;*/
-    padding: 20rpx 0;
     background-color: #eeeeee;
+    height: calc(100% - 100rpx);
   }
 
   swiper-item {
     height: 100%;
     overflow: scroll;
-    padding: 30rpx 0;
   }
 
   .tab {
@@ -140,14 +174,28 @@
   }
 
   .card {
-    width: 500rpx;
-    border: solid 5rpx #000000;
-    margin: 30rpx auto;
-    padding: 20rpx;
+    width:600rpx;
+    margin:30rpx auto;
+    border-radius:20rpx;
+    background:#ffffff;
+    border: 4rpx solid #dcdee2;
+    padding:  20rpx 0;
   }
-
   .card p {
     height: 70rpx;
     line-height: 70rpx;
+    padding: 0 30rpx;
+    font-size: 30rpx;
+  }
+
+  .card .title {
+    font-size: 40rpx;
+    border-bottom: 4rpx solid #dcdee2;
+    padding: 0rpx 30rpx 20rpx;
+    margin-bottom: 20rpx;
+  }
+  .key {
+    display: inline-block;
+    width: 160rpx;
   }
 </style>
