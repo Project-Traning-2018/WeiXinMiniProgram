@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: admin
+    url: jdbc:mysql://127.0.0.1:3306/activity103?characterEncoding=utf8&useSSL=false
+  jpa:
+    show-sql: true
+
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 10
+    timeout: 2000ms
+
+wx:
+ appid: wx0a526d5921db97d6
+ secret: 90c1b88c5c951c54c5241b2816d898d1
+
+supermanager:
+  account: root
+  password: activity103
