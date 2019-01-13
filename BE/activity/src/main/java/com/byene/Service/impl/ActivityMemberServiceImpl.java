@@ -6,6 +6,7 @@ import com.byene.Service.ActivityMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,18 +22,21 @@ public class ActivityMemberServiceImpl implements ActivityMemberService {
     ActivityMemberRepository activityMemberRepository;
 
     @Override
+    @Transactional
     public void save(ActivityMember activityMember) {
 
         activityMemberRepository.save( activityMember );
     }
 
     @Override
+    @Transactional
     public void delete(ActivityMember activityMember) {
 
         activityMemberRepository.delete( activityMember );
     }
 
     @Override
+    @Transactional
     public void deleteOneByUserId(String userId, Integer ActivityId) {
 
         List< ActivityMember > activityMemberList = activityMemberRepository.findAllByActivityUseridIn( userId );
@@ -51,7 +55,14 @@ public class ActivityMemberServiceImpl implements ActivityMemberService {
     }
 
     @Override
+    @Transactional
     public List< ActivityMember > findallByActivityId(Integer activityId) {
         return activityMemberRepository.findAllByActivityActivityidIn( activityId );
+    }
+
+    @Override
+    @Transactional
+    public List<ActivityMember> findallByUserId(String userId) {
+        return activityMemberRepository.findAllByActivityUseridIn( userId );
     }
 }

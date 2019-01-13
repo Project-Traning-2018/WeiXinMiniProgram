@@ -6,10 +6,7 @@ import com.byene.Pojo.ManagerInfo2Back;
 import com.byene.Pojo.ResultVO;
 import com.byene.Service.ManagerInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -81,7 +78,7 @@ public class ManagerInfoController {
 
     /*获取管理员账号信息列表*/
     @PostMapping( "/managerinfo/list" )
-    public ResultVO managerInfoList( String managerLoginno )
+    public ResultVO managerInfoList(  @RequestParam("managerLoginno") String  managerLoginno )
     {
         ResultVO resultVO = new ResultVO();
 
@@ -95,7 +92,7 @@ public class ManagerInfoController {
 
     /*删除管理员账号信息*/
     @PostMapping( "/managerinfo/delete" )
-    public ResultVO managerInfoDelete( String managerLoginno )
+    public ResultVO managerInfoDelete( @RequestParam("managerLoginno") String managerLoginno )
     {
         ResultVO resultVO = new ResultVO();
 
@@ -108,7 +105,7 @@ public class ManagerInfoController {
 
     /*判断是否为超级管理员*/
     @PostMapping( "/managerinfo/supermanagercheck" )
-    public ResultVO supermanagerCheck( String managerLoginno )
+    public ResultVO supermanagerCheck( @RequestParam("managerLoginno") String managerLoginno )
     {
         ResultVO resultVO = new ResultVO();
         if( managerLoginno.equals( "root" ) )
