@@ -54,6 +54,7 @@
           }).then(function (res) {
             console.log(res.data.data)
             that.globalData.id = res.data.data
+            console.log(that.globalData.id)
           })
         }
       })

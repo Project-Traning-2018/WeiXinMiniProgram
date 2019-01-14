@@ -18,7 +18,6 @@
     <!--activityOrganizer: '',-->
     <!--activityOrganizerphonenumber: '',-->
     <!--activityOrangizerid: '',-->
-
     <input type="text" id="act_sub" placeholder="请输入标题" v-model="activitySubject"><br>
     <textarea id="act_con" placeholder="请输入详细信息" v-model="activityContent"></textarea>
     <span id="act_type">请选择活动类型</span>
@@ -243,7 +242,7 @@
               mask: true,
               complete(){
                 wx.navigateTo({
-                  url: '../_launchActivityDetail/main'
+                  url: '../launchActivityDetail/main'
                 })
               }
             })

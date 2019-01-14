@@ -1,16 +1,15 @@
 <template>
   <div class="indexContainer">
-    <div class="mask">
+<!--    <div class="mask" v-if="notReady">
       <div class="img-container">
         <image src="../../static/images/spinner.svg" class="loading"></image>
         <p class="info">登录中</p>
       </div>
-    </div>
+    </div>-->
     <image v-if="isShow" class="index_img" :src="userInfo.avatarUrl" alt=""></image>
     <Button class="btn" v-else
             open-type="getUserInfo"
-            @getuserinfo="getUserInfo"
-    >
+            @getuserinfo="getUserInfo">
       点击获取用户信息
     </Button>
     <p class="userName">Hello {{ userInfo.nickName }}</p>
@@ -27,11 +26,16 @@
       return {
         userInfo: {}, // 初始数据
         isShow: false, // 没有授权
-        notReady: this.globalData.id == undefined
       }
+    },
+    computed: {
+        notReady: function () {
+          return this.globalData.id == undefined
+        }
     },
     beforeMount() {
       // 获取用户登录信息
+      console.log('dayin:'+this.globalData.id)
       this.handleGetUserInfo();
     },
     methods: {
@@ -42,9 +46,10 @@
           success: (data)=>{
             // console.log('data:' +JSON.stringify(data));
             that.globalData.userInfo = data.userInfo;
+            this.userInfo= data.userInfo
             console.log('id: '+that.globalData.id)
             let data2send = {
-              userIdMd5 : that.globalData.id,
+              userIdMd5 : 'jiguochang',
               userName: data.userInfo.nickName,
               userIcon: "this",
               userPhonenumber: ''
@@ -77,6 +82,7 @@
           // 用户授权
           this.handleGetUserInfo();
         }
+        console.log(this.globalData.userInfo)
       },
 
       handleTap(){

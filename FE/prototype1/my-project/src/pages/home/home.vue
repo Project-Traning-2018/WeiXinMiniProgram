@@ -181,7 +181,7 @@
         mounted() {
         }
       })
-      this.mapCtx = wx.createMapContext('qqMap');
+      this.mapCtx = wx.createMapContext('myMap');
     }
   }
 </script>

@@ -25,46 +25,23 @@
           <p><span class="key">报名时间</span><span class="value">{{act.activitySignDate}}</span></p>
           <p><span class="key">报名活动</span><span class="value">{{act.activityDate}}</span></p>
         </div>
-        <div class="card">
-          <p class="title">标题</p>
-          <p><span class="key">地点</span><span class="value">55555555555</span></p>
-          <p><span class="key">类别</span><span class="value">4565698</span></p>
-          <p><span class="key">报名时间</span><span class="value">5465555</span></p>
-          <p><span class="key">报名活动</span><span class="value">"1234561"</span></p>
-        </div>
-        <div class="card">
-          <p class="title">标题</p>
-          <p>地点</p>
-          <p>时间</p>
-        </div>
-        <div class="card">
-          <p class="title">标题</p>
-          <p>地点</p>
-          <p>时间</p>
-        </div>
-        <div class="card">
-          <p  class="title">标题</p>
-          <p>地点</p>
-          <p>时间</p>
-        </div>
-        <div class="card">
-          <p class="title">标题</p>
-          <p>地点</p>
-          <p>时间</p>
+      </swiper-item>
+      <swiper-item>
+        <div class="card" v-for="(act, index) in actPartByme" :index="index" @tap="toDetailParticipate">
+          <p class="title">{{act.activitySubject}}</p>
+          <p><span class="key">地点</span><span class="value">{{act.activityAddressname}}</span></p>
+          <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
+          <p><span class="key">报名时间</span><span class="value">{{act.activitySignDate}}</span></p>
+          <p><span class="key">报名活动</span><span class="value">{{act.activityDate}}</span></p>
         </div>
       </swiper-item>
       <swiper-item>
-        <div class="card">
-          <p>标题</p>
-          <p>地点</p>
-          <p>时间</p>
-        </div>
-      </swiper-item>
-      <swiper-item>
-        <div class="card">
-          <p>标题</p>
-          <p>地点</p>
-          <p>事件</p>
+        <div class="card" v-for="(act, index) in actCollByme" :index="index" @tap="toDetailCollect">
+          <p class="title">{{act.activitySubject}}</p>
+          <p><span class="key">地点</span><span class="value">{{act.activityAddressname}}</span></p>
+          <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
+          <p><span class="key">报名时间</span><span class="value">{{act.activitySignDate}}</span></p>
+          <p><span class="key">报名活动</span><span class="value">{{act.activityDate}}</span></p>
         </div>
       </swiper-item>
     </swiper>
@@ -102,8 +79,59 @@
             activityDate: '明天'
           },
         ], // 我发起的活动列表
-        actPartByme: [], // 我参与的活动列表
-        actCollByme: [], // 我收藏的活动列表
+        actPartByme: [
+          {
+            activitySubject: '活动1',
+            activityAddressname: '活动1',
+            activityType: '活动1',
+            activitySignDate: '活动1',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动2',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动3',
+            activityAddressname: '活动1',
+            activityType: '活动1',
+            activitySignDate: '活动1',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动3',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+        ], // 我参与的活动列表
+        actCollByme: [
+          {
+            activitySubject: '活动2',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动3',
+            activityAddressname: '活动1',
+            activityType: '活动1',
+            activitySignDate: '活动1',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动3',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+        ], // 我收藏的活动列表
       }
     },
     methods: {
@@ -122,19 +150,19 @@
       toDetailLaunch($event) {
         let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
         wx.navigateTo({
-          url: '../_launchActivityDetail/main?index='+index
+          url: '../launchActivityDetail/main?index='+index
         })
       },
       toDetailParticipate($event) {
         let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
         wx.navigateTo({
-          url: '../_participateActivityDetail/main?index='+index
+          url: '../participateActivityDetail/main?index='+index
         })
       },
       toDetailCollect($event) {
         let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
         wx.navigateTo({
-          url: '../_collectActivityDetail/main?index='+index
+          url: '../collectActivityDetail/main?index='+index
         })
       },
     },
@@ -152,7 +180,9 @@
         url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/listbyid'+'?userKey='+'jiguochang',/*contentType: 'application/json;charset=utf-8',*/
         // body: JSON.stringify(data2send)
       }).then(function(res){
-        console.log(res.data)
+        that.actLaunByme =  res.data.data
+        that.globalData.launActList = res.data.data
+        console.log(that.globalData.launActList)
         return that.$fly.get({
           method: 'POST',
           url: 'xxx'

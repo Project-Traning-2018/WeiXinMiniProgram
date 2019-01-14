@@ -2,6 +2,8 @@
   <view>
     <image :src="src"></image>
     <text @tap="handleTap">{{text}}</text>
+    <image :src="img"></image>
+    <p>名字是 {{name}}</p>
   </view>
 </template>
 
@@ -14,7 +16,9 @@
     data() {
       return {
         src: '../../static/images/profile.png',
-        text: '反馈'
+        text: '反馈',
+        img: '',
+        name: ''
       }
     },
     name: "user",
@@ -25,6 +29,10 @@
           url: '../suggestion/main'
         })
       }
+    },
+    onLoad() {
+      this.img = this.globalData.userInfo.avatarUrl
+      this.name = this.globalData.userInfo.nickName
     }
   }
 </script>
