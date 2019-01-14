@@ -10,14 +10,13 @@ import com.byene.Utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 活动收藏相关操作
  * @author byene
  * @date 2019/1/13 9:35 PM
  */
@@ -51,6 +50,28 @@ public class ActivityCollectController {
         WxInfo Wxresult = JsonUtils.jsonToPojo( strRedis.opsForValue().get( userKey ), WxInfo.class );
         String userId = Wxresult.getOpenid();
 
+        /*无法重复收藏活动*/
+        List<ActivityCollect> activityCollectList = new ArrayList<>();
+
+        boolean flag = false;
+
+        for( ActivityCollect key: activityCollectList )
+        {
+            if( key.getUsercollectActivityid().equals( activityId ) )
+            {
+                flag = true;
+                break;
+            }
+        }
+
+        if( flag )
+        {
+            resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_COLLECT_ERROR.getCode() );
+            resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_COLLECT_ERROR.getMessage() );
+            return resultVO;
+        }
+
+        /*活动收藏成功*/
         ActivityCollect activityCollect = new ActivityCollect();
         activityCollect.setUsercollectUserid( userId );
         activityCollect.setUsercollectActivityid( activityId );

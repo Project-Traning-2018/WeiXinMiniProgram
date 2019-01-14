@@ -23,6 +23,7 @@ public enum ActivityInfoStatusEnum {
     ACTIVITY_COLLECT_LIST_SUCCESS( 14, "获取收藏活动列表信息成功" ),
     ACTIVITY_COLLECT_DELETE_SUCCESS( 15, "删除收藏活动成功" ),
     ACTIVITY_PEOPLEREGISTERED_SUCCESS( 16, "获取活动已报名人数成功" ),
+    ACTIVITY_COLLECT_ERROR( 17, "无法重复收藏" ),
     ;
 
     private Integer code;

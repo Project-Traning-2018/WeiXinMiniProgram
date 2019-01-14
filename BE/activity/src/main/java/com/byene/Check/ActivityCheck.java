@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
+ * 定时检查活动有效性
  * @author byene
  * @date 2019/1/13 2:34 PM
  */

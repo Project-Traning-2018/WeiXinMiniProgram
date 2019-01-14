@@ -43,6 +43,7 @@ public class ActivityParticipateController {
     @Autowired
     CalculateDistance calculateDistance;
 
+    /*取消参加活动*/
     @PostMapping( "/activityinfo/participatecancel" )
     public ResultVO ActivityInfopParticipateCancel(@RequestParam("userKey") String userKey, @RequestParam("activityId") Integer activityId  )
     {
@@ -80,6 +81,7 @@ public class ActivityParticipateController {
         return resultVO;
     }
 
+    /*参加活动*/
     @PostMapping( "/activityinfo/participate" )
     public ResultVO ActivityParticipationInfo(@RequestBody ActivityChooseInfo2Back activityChooseInfo2Back )
     {
@@ -166,6 +168,7 @@ public class ActivityParticipateController {
         return resultVO;
     }
 
+    /*获取参加活动列表*/
     @PostMapping( "/activityinfo/participatelist" )
     public ResultVO ActivityInfoParticipateList( @RequestParam("userKey") String userKey )
     {

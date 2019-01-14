@@ -2,17 +2,19 @@ package com.byene.Controller;
 
 import com.byene.Conversion.ActivityInfo2BacktoActivityInfo;
 import com.byene.Conversion.CalculateDistance;
-import com.byene.Conversion.TimeTransfer;
+import com.byene.Conversion.UserInfo2UserInfoToFront;
+import com.byene.Dao.ActivityCollect;
 import com.byene.Dao.ActivityInfo;
 import com.byene.Dao.ActivityMember;
 import com.byene.Dao.UserInfo;
 import com.byene.Enums.ActivityInfoStatusEnum;
 import com.byene.Enums.WxInfoStausEnum;
-import com.byene.Pojo.Activity.ActivityChooseInfo2Back;
 import com.byene.Pojo.Activity.ActivityInfo2Back;
-import com.byene.Pojo.Mapinfo2Back;
+import com.byene.Pojo.MapInfo2Back;
 import com.byene.Pojo.ResultVO;
+import com.byene.Pojo.UserInfoToFront;
 import com.byene.Pojo.WxInfo;
+import com.byene.Service.impl.ActivityCollectServiceImpl;
 import com.byene.Service.impl.ActivityInfoServiceImpl;
 import com.byene.Service.impl.ActivityMemberServiceImpl;
 import com.byene.Service.impl.UserInfoServiceImpl;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 发布活动相关操作
  * @author byene
  * @date 2019/1/11 11:27 AM
  */
@@ -52,6 +55,12 @@ public class ActivityController {
 
     @Autowired
     CalculateDistance calculateDistance;
+
+    @Autowired
+    UserInfo2UserInfoToFront userInfo2UserInfoToFront;
+
+    @Autowired
+    ActivityCollectServiceImpl activityCollectService;
 
 
     public static double R = 2.0;
@@ -97,6 +106,7 @@ public class ActivityController {
         return resultVO;
     }
 
+    /*删除已发布活动*/
     @PostMapping( "/activityinfo/deletebyorganizer" )
     public ResultVO ActivityInfoDeletebyOrganizer( @RequestParam("userKey") String userKey, @RequestParam("activityId") Integer activityId )
     {
@@ -115,6 +125,7 @@ public class ActivityController {
 
         activityInfoService.delete( activityId );
 
+        /*删除活动成员信息*/
         List< ActivityMember > activityMemberList = activityMemberService.findallByActivityId( activityId );
 
         for( ActivityMember key: activityMemberList )
@@ -122,11 +133,20 @@ public class ActivityController {
             activityMemberService.delete( key );
         }
 
+        /*删除活动收藏信息*/
+        List< ActivityCollect > activityCollectList = activityCollectService.FindallByActivityId( activityId );
+
+        for( ActivityCollect key: activityCollectList )
+        {
+            activityCollectService.delete( key );
+        }
+
         resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_DELETE_SUCCESS.getCode() );
         resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_DELETE_SUCCESS.getMessage() );
         return resultVO;
     }
 
+    /*查询已发布活动列表*/
     @PostMapping( "/activityinfo/listbyid" )
     public ResultVO ActivityInfoListByid(  @RequestParam("userKey") String userKey )
     {
@@ -153,8 +173,9 @@ public class ActivityController {
         return resultVO;
     }
 
+    /*查询附近已发布活动*/
     @PostMapping( "/activityinfo/getactivitynearby" )
-    public ResultVO GetActivityNearby( @RequestBody Mapinfo2Back mapinfo2Back )
+    public ResultVO GetActivityNearby( @RequestBody MapInfo2Back mapinfo2Back )
     {
         ResultVO resultVO = new ResultVO();
         log.info( "地图信息： " + mapinfo2Back.toString() );
@@ -189,6 +210,7 @@ public class ActivityController {
         return resultVO;
     }
 
+    /*查询活动已报名人数列表*/
     @PostMapping( "/activityinfo/peopleregisteredlist" )
     public ResultVO GetPeopleRegisteredList( @RequestParam("userKey") String userKey, @RequestParam("activityId") Integer activityId )
     {
@@ -202,7 +224,7 @@ public class ActivityController {
             return resultVO;
         }
 
-        List<UserInfo> userInfoList = new ArrayList<>();
+        List<UserInfoToFront> userInfoToFrontList = new ArrayList<>();
 
         List< ActivityMember > activityMemberList = activityMemberService.findallByActivityId( activityId );
 
@@ -210,12 +232,12 @@ public class ActivityController {
         {
             String userId = key.getActivityUserid();
             UserInfo userInfo = userInfoService.FindOneById( userId );
-            userInfoList.add( userInfo );
+            userInfoToFrontList.add( userInfo2UserInfoToFront.UserInfoTransfer( userInfo ) );
         }
 
         resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_PEOPLEREGISTERED_SUCCESS.getCode() );
         resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_PEOPLEREGISTERED_SUCCESS.getMessage() );
-        resultVO.setData( userInfoList );
+        resultVO.setData( userInfoToFrontList );
         return resultVO;
     }
 }

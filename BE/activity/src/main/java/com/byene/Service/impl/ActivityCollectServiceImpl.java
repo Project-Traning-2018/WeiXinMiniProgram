@@ -33,4 +33,9 @@ public class ActivityCollectServiceImpl implements ActivityCollectService {
     public void delete(ActivityCollect activityCollect) {
         activityCollectRepository.delete( activityCollect );
     }
+
+    @Override
+    public List<ActivityCollect> FindallByActivityId(Integer activityId) {
+        return activityCollectRepository.findAllByUsercollectActivityidIn( activityId );
+    }
 }
