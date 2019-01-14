@@ -10,6 +10,7 @@ public enum BackInfoStausEnum {
     BACK_EMPTY( 2, "该页无信息" ),
     BACK_SUGGESTION_SUCCESS( 3, "建议列表读取成功" ),
     BACK_SUGGESTION_DELETE_SUCCESS( 4, "建立删除成功" ),
+    BACK_ACTIVITY_SUCCESS( 5, "活动信息列表读取成功" ),
     ;
 
     private Integer code;

@@ -1,29 +1,35 @@
 package com.byene.Controller;
 
-import com.byene.Conversion.TimeTransfer;
+import com.byene.Conversion.ActivityInfo2BacktoActivityInfo;
+import com.byene.Conversion.CalculateDistance;
+import com.byene.Conversion.UserInfo2UserInfoToFront;
+import com.byene.Dao.ActivityCollect;
 import com.byene.Dao.ActivityInfo;
 import com.byene.Dao.ActivityMember;
+import com.byene.Dao.UserInfo;
 import com.byene.Enums.ActivityInfoStatusEnum;
 import com.byene.Enums.WxInfoStausEnum;
-import com.byene.Pojo.Activity.ActivityChooseInfo2Back;
 import com.byene.Pojo.Activity.ActivityInfo2Back;
+import com.byene.Pojo.MapInfo2Back;
 import com.byene.Pojo.ResultVO;
+import com.byene.Pojo.UserInfoToFront;
 import com.byene.Pojo.WxInfo;
+import com.byene.Service.impl.ActivityCollectServiceImpl;
 import com.byene.Service.impl.ActivityInfoServiceImpl;
 import com.byene.Service.impl.ActivityMemberServiceImpl;
+import com.byene.Service.impl.UserInfoServiceImpl;
 import com.byene.Utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 发布活动相关操作
  * @author byene
  * @date 2019/1/11 11:27 AM
  */
@@ -39,10 +45,25 @@ public class ActivityController {
     ActivityMemberServiceImpl activityMemberService;
 
     @Autowired
+    UserInfoServiceImpl userInfoService;
+
+    @Autowired
     StringRedisTemplate strRedis;
 
     @Autowired
-    TimeTransfer timeTransfer;
+    ActivityInfo2BacktoActivityInfo activityInfo2BacktoActivityInfo;
+
+    @Autowired
+    CalculateDistance calculateDistance;
+
+    @Autowired
+    UserInfo2UserInfoToFront userInfo2UserInfoToFront;
+
+    @Autowired
+    ActivityCollectServiceImpl activityCollectService;
+
+
+    public static double R = 2.0;
 
     /*保存活动信息*/
     @PostMapping( "/activityinfo/save" )
@@ -64,72 +85,30 @@ public class ActivityController {
         /*获取用户信息*/
         WxInfo Wxresult = JsonUtils.jsonToPojo( strRedis.opsForValue().get( userKey ), WxInfo.class );
 
-        /*将activityInfo2Back的值复制到ActivityInfo中*/
-        ActivityInfo activityInfo = new ActivityInfo();
+        ActivityInfo activityInfo = activityInfo2BacktoActivityInfo.Transfer( Wxresult, activityInfo2Back );
 
-        /*活动类型*/
-        activityInfo.setActivityType( activityInfo2Back.getActivityType() );
 
-        /*活动主题*/
-        activityInfo.setActivitySubject( activityInfo2Back.getActivitySubject() );
+        activityInfo.setActivityPeopleregistered( activityInfo.getActivityPeopleregistered() + 1 );
 
-        /*活动内容*/
-        activityInfo.setActivityContent( activityInfo2Back.getActivityContent() );
-
-        /*活动报名开始时间*/
-        activityInfo.setActivitySignstartdate( timeTransfer.String2Timestamp( activityInfo2Back.getActivitySignstartdate() ) );
-
-        /*活动报名结束时间*/
-        activityInfo.setActivitySignenddate( timeTransfer.String2Timestamp( activityInfo2Back.getActivitySignenddate() ) );
-
-        /*活动开始时间*/
-        activityInfo.setActivityStartdate( timeTransfer.String2Timestamp( activityInfo2Back.getActivityStartdate() ) );
-
-        /*活动结束时间*/
-        activityInfo.setActivityEnddate( timeTransfer.String2Timestamp( activityInfo2Back.getActivityEnddate() ) );
-
-        /*活动费用*/
-        activityInfo.setActivityFee( activityInfo2Back.getActivityFee() );
-
-        /*活动总人数*/
-        activityInfo.setActivityPeoplelimit( activityInfo2Back.getActivityPeoplelimit() );
-
-        /*活动地址*/
-        activityInfo.setActivityAddress( activityInfo2Back.getActivityAddress() );
-
-        /*活动地址名称*/
-        activityInfo.setActivityAddressname( activityInfo2Back.getActivityAddressname() );
-
-        /*活动经度*/
-        //log.info( "转换前： " +  activityInfo2Back.getActivityLatitude() );
-        //BigDecimal bd = new BigDecimal( activityInfo2Back.getActivityLatitude()  );
-        //log.info( "转换后： " + bd );
-        activityInfo.setActivityLatitude( new BigDecimal( activityInfo2Back.getActivityLatitude()  ));
-
-        /*活动纬度*/
-        activityInfo.setActivityLongitude( new BigDecimal( activityInfo2Back.getActivityLongitude() ) );
-
-        /*活动发起人*/
-        activityInfo.setActivityOrganizer( activityInfo2Back.getActivityOrganizer() );
-
-        /*活动发起人手机号*/
-        activityInfo.setActivityOrganizerphonenumber( activityInfo2Back.getActivityOrganizerphonenumber() );
-
-        /*活动发起人openid*/
-        activityInfo.setActivityOrganizerid( Wxresult.getOpenid() );
+        ActivityMember activityMember = new ActivityMember();
+        activityMember.setActivityUserid( activityInfo.getActivityOrganizerid() );
+        activityMember.setActivityActivityid( activityInfo.getActivityId() );
+        activityMemberService.save( activityMember );
 
         log.info( "活动信息： " + activityInfo.toString() );
-
         activityInfoService.save( activityInfo );
+
+
 
         resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_ADD_SUCCESS.getCode() );
         resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_ADD_SUCCESS.getMessage() );
-        resultVO.setData( activityInfo );
+
         return resultVO;
     }
 
+    /*删除已发布活动*/
     @PostMapping( "/activityinfo/deletebyorganizer" )
-    public ResultVO ActivityInfoDeletebyOrganizer( String userKey, Integer acitivityId )
+    public ResultVO ActivityInfoDeletebyOrganizer( @RequestParam("userKey") String userKey, @RequestParam("activityId") Integer activityId )
     {
         ResultVO resultVO = new ResultVO();
         log.info( "userKey值:  " + userKey );
@@ -144,13 +123,22 @@ public class ActivityController {
         WxInfo Wxresult = JsonUtils.jsonToPojo( strRedis.opsForValue().get( userKey ), WxInfo.class );
         String userId = Wxresult.getOpenid();
 
-        activityInfoService.delete( acitivityId );
+        activityInfoService.delete( activityId );
 
-        List< ActivityMember > activityMemberList = activityMemberService.findallByActivityId( acitivityId );
+        /*删除活动成员信息*/
+        List< ActivityMember > activityMemberList = activityMemberService.findallByActivityId( activityId );
 
         for( ActivityMember key: activityMemberList )
         {
             activityMemberService.delete( key );
+        }
+
+        /*删除活动收藏信息*/
+        List< ActivityCollect > activityCollectList = activityCollectService.FindallByActivityId( activityId );
+
+        for( ActivityCollect key: activityCollectList )
+        {
+            activityCollectService.delete( key );
         }
 
         resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_DELETE_SUCCESS.getCode() );
@@ -158,44 +146,9 @@ public class ActivityController {
         return resultVO;
     }
 
-    @PostMapping( "/activityinfo/participatecancel" )
-    public ResultVO ActivityInfopParticipateCancel( String userKey, Integer acitivityId  )
-    {
-        ResultVO resultVO = new ResultVO();
-        log.info( "userKey值:  " + userKey );
-        /*userKey已过期,返回身份过期信息*/
-        if( strRedis.opsForValue().get( userKey ) == null )
-        {
-            resultVO.setCode( WxInfoStausEnum.WX_ERROR.getCode() );
-            resultVO.setMsg( WxInfoStausEnum.WX_ERROR.getMessage() );
-            return resultVO;
-        }
-        /*获取用户信息*/
-        WxInfo Wxresult = JsonUtils.jsonToPojo( strRedis.opsForValue().get( userKey ), WxInfo.class );
-        String userId = Wxresult.getOpenid();
-
-        ActivityInfo activityInfo = activityInfoService.FindOnebyId( acitivityId );
-        activityInfo.setActivityPeopleregistered( activityInfo.getActivityPeopleregistered() - 1 );
-        activityInfoService.save( activityInfo );
-
-        List< ActivityMember > activityMemberList = activityMemberService.findallByActivityId( acitivityId );
-
-        for( ActivityMember key: activityMemberList )
-        {
-            if( key.getActivityUserid().equals( userId ) )
-            {
-                activityMemberService.delete( key );
-                break;
-            }
-        }
-
-        resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_PARTICIPATE_CANCEL_SUCCESS.getCode() );
-        resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_PARTICIPATE_CANCEL_SUCCESS.getMessage() );
-        return resultVO;
-    }
-
+    /*查询已发布活动列表*/
     @PostMapping( "/activityinfo/listbyid" )
-    public ResultVO ActivityInfoListByid( String userKey )
+    public ResultVO ActivityInfoListByid(  @RequestParam("userKey") String userKey )
     {
         ResultVO resultVO = new ResultVO();
         log.info( "userKey值:  " + userKey );
@@ -220,14 +173,14 @@ public class ActivityController {
         return resultVO;
     }
 
-    @PostMapping( "/activityinfo/participate" )
-    public ResultVO ActivityParticipationInfo(@RequestBody ActivityChooseInfo2Back activityChooseInfo2Back )
+    /*查询附近已发布活动*/
+    @PostMapping( "/activityinfo/getactivitynearby" )
+    public ResultVO GetActivityNearby( @RequestBody MapInfo2Back mapinfo2Back )
     {
         ResultVO resultVO = new ResultVO();
-        log.info( "用户ID和活动ID： " + activityChooseInfo2Back.toString() );
+        log.info( "地图信息： " + mapinfo2Back.toString() );
 
-        String userKey = activityChooseInfo2Back.getUserIdMd5();
-        Integer activityId = activityChooseInfo2Back.getActivityId();
+        String userKey = mapinfo2Back.getUserIdMd5();
         /*userKey已过期,返回身份过期信息*/
         if( strRedis.opsForValue().get( userKey ) == null )
         {
@@ -236,44 +189,55 @@ public class ActivityController {
             return resultVO;
         }
 
-        /*获取用户信息*/
-        WxInfo Wxresult = JsonUtils.jsonToPojo( strRedis.opsForValue().get( userKey ), WxInfo.class );
 
-        /*获取活动信息*/
-        ActivityInfo Activityresult = activityInfoService.FindOnebyId( activityId );
+        BigDecimal UserLongitude = mapinfo2Back.getActivityLongitude();
+        BigDecimal UserLatitude = mapinfo2Back.getActivityLatitude();
+        List< ActivityInfo > activityInfoList = activityInfoService.findall();
+        List< ActivityInfo > activityInfoValidList = new ArrayList<>();
 
-        /*活动已过期*/
-        if( Activityresult.getActivityValid().equals( ActivityInfoStatusEnum.ACTIVITY_INVALID.getCode() ) )
+        for( ActivityInfo key : activityInfoList )
         {
-            resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_INVALID.getCode() );
-            resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_INVALID.getMessage() );
-            return resultVO;
+            double dis = calculateDistance.getDistance( UserLatitude.doubleValue(), UserLongitude.doubleValue(), key.getActivityLatitude().doubleValue(), key.getActivityLongitude().doubleValue() );
+            if( dis <= R )
+            {
+                activityInfoValidList.add( key );
+            }
         }
 
-        /*活动人数已满*/
-        if( Activityresult.getActivityPeopleregistered().equals( Activityresult.getActivityPeoplelimit() ) )
-        {
-            resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_PEOPLE_FULL.getCode() );
-            resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_PEOPLE_FULL.getMessage() );
-            return resultVO;
-        }
-
-        String UserId = Wxresult.getOpenid();
-        Integer ActivityId = Activityresult.getActivityId();
-
-        /*活动人数加1*/
-        Activityresult.setActivityPeopleregistered( Activityresult.getActivityPeopleregistered() + 1 );
-        activityInfoService.save( Activityresult );
-
-        /*添加活动参与人对应表信息*/
-        ActivityMember activityMember = new ActivityMember();
-        activityMember.setActivityUserid( UserId );
-        activityMember.setActivityActivityid( ActivityId );
-        activityMemberService.save( activityMember );
-
-        resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_PARTICIPATE_SUCCESS.getCode() );
-        resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_PARTICIPATE_SUCCESS.getMessage() );
+        resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_NEARBY_SUCCESS.getCode() );
+        resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_NEARBY_SUCCESS.getMessage() );
+        resultVO.setData( activityInfoValidList );
         return resultVO;
     }
 
+    /*查询活动已报名人数列表*/
+    @PostMapping( "/activityinfo/peopleregisteredlist" )
+    public ResultVO GetPeopleRegisteredList( @RequestParam("userKey") String userKey, @RequestParam("activityId") Integer activityId )
+    {
+        ResultVO resultVO = new ResultVO();
+        log.info( "userKey值:  " + userKey );
+        /*userKey已过期,返回身份过期信息*/
+        if( strRedis.opsForValue().get( userKey ) == null )
+        {
+            resultVO.setCode( WxInfoStausEnum.WX_ERROR.getCode() );
+            resultVO.setMsg( WxInfoStausEnum.WX_ERROR.getMessage() );
+            return resultVO;
+        }
+
+        List<UserInfoToFront> userInfoToFrontList = new ArrayList<>();
+
+        List< ActivityMember > activityMemberList = activityMemberService.findallByActivityId( activityId );
+
+        for( ActivityMember key: activityMemberList )
+        {
+            String userId = key.getActivityUserid();
+            UserInfo userInfo = userInfoService.FindOneById( userId );
+            userInfoToFrontList.add( userInfo2UserInfoToFront.UserInfoTransfer( userInfo ) );
+        }
+
+        resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_PEOPLEREGISTERED_SUCCESS.getCode() );
+        resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_PEOPLEREGISTERED_SUCCESS.getMessage() );
+        resultVO.setData( userInfoToFrontList );
+        return resultVO;
+    }
 }

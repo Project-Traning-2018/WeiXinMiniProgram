@@ -1,11 +1,13 @@
 package com.byene.Controller;
 
+import com.byene.Dao.ActivityInfo;
 import com.byene.Dao.UserInfo;
 import com.byene.Dao.UserSuggestion;
 import com.byene.Enums.BackInfoStausEnum;
 import com.byene.Pojo.Page.BackPage2Back;
 import com.byene.Pojo.ResultVO;
 import com.byene.Pojo.Suggestion.SuggestionDelete2Back;
+import com.byene.Service.impl.ActivityInfoServiceImpl;
 import com.byene.Service.impl.UserInfoServiceImpl;
 import com.byene.Service.impl.UserSuggestionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,11 @@ public class BackController {
     @Autowired
     UserSuggestionServiceImpl userSuggestionService;
 
-    @PostMapping( "/userinfolist" )
-    public ResultVO GetUserinfo(@RequestBody BackPage2Back backPage2Back )
+    @Autowired
+    ActivityInfoServiceImpl activityInfoService;
+
+    @PostMapping( "/userinfolistbypage" )
+    public ResultVO GetUserinfobypage(@RequestBody BackPage2Back backPage2Back )
     {
 
         ResultVO resultVO = new ResultVO();
@@ -54,8 +59,46 @@ public class BackController {
         return resultVO;
     }
 
+    @PostMapping( "/userinfolist" )
+    public ResultVO GetUserinfo( )
+    {
+        ResultVO resultVO = new ResultVO();
+        List< UserInfo > userInfoList = userInfoService.FindAll();
+
+        resultVO.setCode( BackInfoStausEnum.BACK_USER_SUCCESS.getCode() );
+        resultVO.setMsg( BackInfoStausEnum.BACK_USER_SUCCESS.getMessage() );
+        resultVO.setData( userInfoList );
+        return resultVO;
+    }
+
+
+    @PostMapping( "/activityinfolist" )
+    public ResultVO GetActivityInfoList( )
+    {
+        ResultVO resultVO = new ResultVO();
+
+        List<ActivityInfo> activityInfoList = activityInfoService.findall();
+
+        resultVO.setCode( BackInfoStausEnum.BACK_ACTIVITY_SUCCESS.getCode() );
+        resultVO.setMsg( BackInfoStausEnum.BACK_ACTIVITY_SUCCESS.getMessage() );
+        resultVO.setData( activityInfoList );
+        return resultVO;
+    }
+
     @PostMapping( "/suggestioninfolist" )
-    public ResultVO GetSuggestionInfo( @RequestBody BackPage2Back backPage2Back )
+    public ResultVO GetSuggestionInfo( )
+    {
+        ResultVO resultVO = new ResultVO();
+        List< UserSuggestion > userSuggestionList = userSuggestionService.FindAll();
+
+        resultVO.setCode( BackInfoStausEnum.BACK_SUGGESTION_SUCCESS.getCode() );
+        resultVO.setMsg( BackInfoStausEnum.BACK_SUGGESTION_SUCCESS.getMessage() );
+        resultVO.setData( userSuggestionList );
+        return resultVO;
+    }
+
+    @PostMapping( "/suggestioninfolistbypage" )
+    public ResultVO GetSuggestionInfobypage( @RequestBody BackPage2Back backPage2Back )
     {
         ResultVO resultVO = new ResultVO();
 

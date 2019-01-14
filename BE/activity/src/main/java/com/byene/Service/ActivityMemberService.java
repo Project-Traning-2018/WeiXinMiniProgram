@@ -17,4 +17,6 @@ public interface ActivityMemberService {
     void deleteOneByUserId(String userId, Integer ActivityId);
 
     List< ActivityMember > findallByActivityId(Integer activityId );
+
+    List< ActivityMember > findallByUserId( String userId );
 }

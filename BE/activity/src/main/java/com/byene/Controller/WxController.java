@@ -12,10 +12,7 @@ import com.byene.Enums.WxInfoStausEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -41,7 +38,7 @@ public class WxController {
     InfoMd5 infoMd5;
 
     @PostMapping( "/wxlogin" )
-    public ResultVO WxLogin(String code )
+    public ResultVO WxLogin( @RequestParam("code") String code )
     {
         /*从微信服务器端获取用户openid和session_key*/
         log.info( "前端code值:  " + code );

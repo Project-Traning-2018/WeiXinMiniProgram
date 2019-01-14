@@ -45,6 +45,7 @@ public class ActivityInfoServiceImpl implements ActivityInfoService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer activityId) {
 
         ActivityInfo activityInfo = activityInfoRepository.getOne( activityId );
