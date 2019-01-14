@@ -18,12 +18,12 @@
     </div>
     <swiper :current="current" duration="150" @change="handleChange">
       <swiper-item>
-        <div class="card" v-for="act in actLaunByme">
+        <div class="card" v-for="(act, index) in actLaunByme" :index="index" @tap="toDetailLaunch">
           <p class="title">{{act.activitySubject}}</p>
-          <p><span>地点</span><span>{{act.activityAddressname}}</span></p>
-          <p><span>类别</span><span>{{act.activityType}}</span></p>
-          <p><span>报名时间</span><span>{{act.activityType}}</span></p>
-          <p><span>报名活动</span><span>{{act.activityType}}</span></p>
+          <p><span class="key">地点</span><span class="value">{{act.activityAddressname}}</span></p>
+          <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
+          <p><span class="key">报名时间</span><span class="value">{{act.activitySignDate}}</span></p>
+          <p><span class="key">报名活动</span><span class="value">{{act.activityDate}}</span></p>
         </div>
         <div class="card">
           <p class="title">标题</p>
@@ -86,7 +86,22 @@
         tab0: 0,
         tab1: 1,
         tab2: 2,
-        actLaunByme: [], // 我发起的活动列表
+        actLaunByme: [
+          {
+            activitySubject: '活动1',
+            activityAddressname: '活动1',
+            activityType: '活动1',
+            activitySignDate: '活动1',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动2',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+        ], // 我发起的活动列表
         actPartByme: [], // 我参与的活动列表
         actCollByme: [], // 我收藏的活动列表
       }
@@ -103,6 +118,24 @@
         this.activeIndex = tapIndex
         this.current = tapIndex+''
         console.log('tapIndex: '+tapIndex + ' activeIndex: '+ this.activeIndex+' current: '+this.current)
+      },
+      toDetailLaunch($event) {
+        let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
+        wx.navigateTo({
+          url: '../_launchActivityDetail/main?index='+index
+        })
+      },
+      toDetailParticipate($event) {
+        let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
+        wx.navigateTo({
+          url: '../_participateActivityDetail/main?index='+index
+        })
+      },
+      toDetailCollect($event) {
+        let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
+        wx.navigateTo({
+          url: '../_collectActivityDetail/main?index='+index
+        })
       },
     },
     onLoad() {

@@ -1,10 +1,13 @@
 {
   "pages": [
-    "pages/my/main",
+    "pages/_launchActivityDetail/main",
+    "pages/home/main",
     "pages/login/main",
+    "pages/my/main",
+    "pages/_participateActivityDetail/main",
+    "pages/_collectActivityDetail/main",
     "pages/newActivity/main",
     "pages/user/main",
-    "pages/home/main",
     "pages/index/main",
     "pages/suggestion/main",
     "pages/logs/main"

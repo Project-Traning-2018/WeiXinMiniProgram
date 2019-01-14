@@ -236,7 +236,23 @@
           url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/save',/*contentType: 'application/json;charset=utf-8',*/
           body: JSON.stringify(data2send)
         }).then(function(res){
-          console.log(res.data)
+          if (parseInt(res.code) === 0) {
+            wx.showToast({
+              title: '发布成功',
+              duration: 1000,
+              mask: true,
+              complete(){
+                wx.navigateTo({
+                  url: '../_launchActivityDetail/main'
+                })
+              }
+            })
+          } else {
+            wx.showToast({
+              title: '发布失败，请稍后重试',
+              duration: 1000
+            })
+          }
         })
 
       },

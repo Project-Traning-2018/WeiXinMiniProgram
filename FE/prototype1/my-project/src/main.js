@@ -11,3 +11,7 @@ App.mpType = 'app'
 const app = new Vue(App)
 app.$mount()
 Vue.prototype.globalData = getApp().globalData
+Vue.prototype.globalData.launActList = {}
+Vue.prototype.globalData.partActList = {}
+Vue.prototype.globalData.collActList = {}
+
