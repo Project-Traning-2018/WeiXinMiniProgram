@@ -23,4 +23,6 @@ public class ActivityChooseInfo2Back {
         this.userIdMd5 = userIdMd5;
         this.activityId = activityId;
     }
+
+
 }
