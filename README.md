@@ -6,12 +6,37 @@
 
 
 ##### 运行方法
+1. cd my-project
+2. npm install
+3. npm start
 
-1. npm install
-2. npm start
 
-
-
+##### 项目目录
+my-project
+- build
+- config
+- src
+  - components
+  - pages
+    - login
+    - home
+    - my
+    - user
+    - newActivity
+    - updateActivity
+    - launchActivityDetail
+    - participateActivityDetail
+    - collectActivityDetail
+    - randomActivityDetail
+    - suggestion
+  - utils
+  - App.vue
+  - app.json
+  - main.js
+- static
+  - images
+  - js
+- package.json
 
 
 

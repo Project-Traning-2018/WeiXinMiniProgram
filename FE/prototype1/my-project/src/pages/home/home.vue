@@ -8,6 +8,7 @@
          :markers="markers"
          :latitude="latitude"
          :longitude="longitude"
+         @markertap="handleSelectSpot($event)"
          scale='16' show-location>
     </map>
     <cover-view>
@@ -42,7 +43,9 @@
           longitude: 0,
           latitude: 0,
           address: '',
-        }
+        },
+        nearbyActId: 0,
+        nearbyActList: []
       }
     },
     methods: {
@@ -50,9 +53,17 @@
         wx.navigateTo({
           url: '../newActivity/main'
         })
+      },
+      // 地图上marker的点击事件
+      handleSelectSpot(e){
+        /*e.mp.markerId*/
+        this.nearbyActId = e.mp.markerId
+        wx.navigateTo({
+          url: '../randomActivityDetail/main?nearbyActId='+this.nearbyActId
+        })
       }
     },
-    beforeCreate() {
+    onShow() {
       let that = this
       let myPoi = {}
       wx.getLocation({
@@ -61,10 +72,10 @@
           console.log("位置信息：")
           console.log(res)
           myPoi = res
-
+          console.log(that.globalData.id)
           /* 获取附件2km内的活动 */
-          let data2Send = {
-            'userIdMd5': 'jiguochang',
+          let data2send = {
+            'userIdMd5': that.globalData.id,
             'activityAddress': 'myAddress',
             'activityAddressname': 'myAddressName',
             'activityLatitude': myPoi.latitude,
@@ -77,13 +88,37 @@
           })
           that.$fly.get({
             method: 'POST',
-            url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/listbyid'+'?userKey='+'jiguochang',/*contentType: 'application/json;charset=utf-8',*/
-            // body: JSON.stringify(data2send)
+            timeout: 500000,
+            url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/getactivitynearby',/*contentType: 'application/json;charset=utf-8',*/
+            body: JSON.stringify(data2send)
           }).then(function(res){
             console.log(res.data)
-            // res = markers
+            that.nearbyActList = res.data.data
+            console.log(res.data.data)
+            console.log(typeof res.data.data)
+            that.globalData.nearbyActList = that.nearbyActList
+            that.markers = []
+            for (let i = 0;i < that.nearbyActList.length;i++) {
+              that.markers[i] = {}
+              that.markers[i].id = that.nearbyActList[i].activityId
+              that.markers[i].latitude = that.nearbyActList[i].activityLatitude
+              that.markers[i].longitude = that.nearbyActList[i].activityLongitude
+              that.markers[i].callout = {
+                content: that.callout.content,
+                bgColor: '#ff0000',
+                color: that.callout.color,
+                padding: that.callout.padding,
+                display: that.callout.display,
+                borderRadius: that.callout.borderRadius
+              }
+              console.log(that.markers[i])
+            }
+          }).catch(function () {
+            wx.showToast({
+              icon: 'none',
+              title: '数据请求失败，请检查网络连接并重启小程序'
+            })
           })
-
           that.qqmapsdk.reverseGeocoder({
             location: {
               latitude: myPoi.latitude,
@@ -93,60 +128,6 @@
               console.log(res)
               that.latitude = myPoi.latitude
               that.longitude = myPoi.longitude
-              that.markers = [
-                {
-                  id: 0,
-                  latitude: res.latitude,
-                  longitude: res.longitude,
-                  callout: {//窗体
-                    content: that.callout.content,
-                    bgColor: that.callout.bgColor,
-                    color: that.callout.color,
-                    padding: that.callout.padding,
-                    display: that.callout.display,
-                    borderRadius: that.callout.borderRadius
-                  }
-                },
-                {
-                  id: 1,
-                  latitude: 30.51428,
-                  longitude: 114.435616,
-                  callout: {//窗体
-                    content: that.callout.content,
-                    bgColor: that.callout.bgColor,
-                    color: that.callout.color,
-                    padding: that.callout.padding,
-                    display: that.callout.display,
-                    borderRadius: that.callout.borderRadius
-                  }
-                },
-                {
-                  id: 2,
-                  latitude: 30.51308,
-                  longitude: 114.43435,
-                  callout: {//窗体
-                    content: that.callout.content,
-                    bgColor: that.callout.bgColor,
-                    color: that.callout.color,
-                    padding: that.callout.padding,
-                    display: that.callout.display,
-                    borderRadius: that.callout.borderRadius
-                  }
-                },
-                {
-                  id: 3,
-                  latitude: 30.505688,
-                  longitude: 114.432465,
-                  callout: {//窗体
-                    content: that.callout.content,
-                    bgColor: that.callout.bgColor,
-                    color: that.callout.color,
-                    padding: that.callout.padding,
-                    display: that.callout.display,
-                    borderRadius: that.callout.borderRadius
-                  }
-                }
-              ]
             }
           })
         },
@@ -178,10 +159,8 @@
             }
           })
         },
-        mounted() {
-        }
       })
-      this.mapCtx = wx.createMapContext('qqMap');
+      this.mapCtx = wx.createMapContext('myMap');
     }
   }
 </script>

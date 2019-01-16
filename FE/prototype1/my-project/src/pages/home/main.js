@@ -7,4 +7,4 @@ let qqmapsdk = new QQMapWX({
 });
 const app = new Vue(App)
 app.$mount()
-app.qqmapsdk = qqmapsdk
+Vue.prototype.qqmapsdk = qqmapsdk
