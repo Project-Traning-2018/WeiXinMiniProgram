@@ -1,6 +1,7 @@
 package com.byene.Dao;
 
 import com.byene.Enums.ActivityInfoStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.time.DateTimeException;
 @Entity
 @Table( name = "activity_info" )
 @Data
+@JsonIgnoreProperties( {"hibernateLazyInitializer","handler"} )
 public class ActivityInfo {
 
     @Id

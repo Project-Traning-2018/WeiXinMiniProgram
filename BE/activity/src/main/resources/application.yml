@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: admin
-    url: jdbc:mysql://127.0.0.1:3306/activity103?characterEncoding=utf8&useSSL=false
+    password: mysql123
+    url: jdbc:mysql://127.0.0.1:3306/activity103?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
   jpa:
     show-sql: true
 
@@ -26,3 +26,4 @@ wx:
 supermanager:
   account: root
   password: activity103
+

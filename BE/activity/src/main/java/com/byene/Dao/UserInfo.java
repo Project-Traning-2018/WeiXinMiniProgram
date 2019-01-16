@@ -1,10 +1,12 @@
 package com.byene.Dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * @author byene
@@ -13,7 +15,8 @@ import javax.persistence.Table;
 @Entity
 @Table( name = "user_info")
 @Data
-public class UserInfo {
+@JsonIgnoreProperties( {"hibernateLazyInitializer","handler"} )
+public class UserInfo implements Serializable {
 
     @Id
     private  String userId;

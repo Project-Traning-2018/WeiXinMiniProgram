@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -186,10 +187,17 @@ public class ActivityParticipateController {
         String userId = Wxresult.getOpenid();
 
         List< ActivityMember > activityMemberList = activityMemberService.findallByUserId( userId );
+        List< ActivityInfo > activityInfoList = new ArrayList<>();
+
+        for( ActivityMember key: activityMemberList )
+        {
+            ActivityInfo activityInfoResult = activityInfoService.FindOnebyId( key.getActivityActivityid() );
+            activityInfoList.add( activityInfoResult );
+        }
 
         resultVO.setData( ActivityInfoStatusEnum.ACTIVITY_PARTICIPATE_LIST_SUCCESS.getCode() );
         resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_PARTICIPATE_LIST_SUCCESS.getMessage() );
-        resultVO.setData( activityMemberList );
+        resultVO.setData( activityInfoList );
 
         return resultVO;
     }

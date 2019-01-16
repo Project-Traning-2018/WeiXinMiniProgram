@@ -92,4 +92,37 @@ public class WxController {
         resultVO.setMsg( WxInfoStausEnum.WX_UPDATE.getMessage() );
         return resultVO;
     }
+
+    @PostMapping( "/getuserinfo" )
+    public ResultVO GetUserInfo( @RequestParam("userKey") String userKey )
+    {
+        log.info( "UserKey:  "+userKey );
+        ResultVO resultVO = new ResultVO();
+
+        /*userKey已过期,返回身份过期信息*/
+        if( strRedis.opsForValue().get( userKey ) == null )
+        {
+            resultVO.setCode( WxInfoStausEnum.WX_ERROR.getCode() );
+            resultVO.setMsg( WxInfoStausEnum.WX_ERROR.getMessage() );
+            return resultVO;
+        }
+
+        /*获取用户信息*/
+        WxInfo Wxresult = JsonUtils.jsonToPojo( strRedis.opsForValue().get( userKey ), WxInfo.class );
+
+        String userId = Wxresult.getOpenid();
+
+        UserInfo userInfo = userInfoService.FindOneById( userId );
+
+        log.info( "用户信息： " + userInfo.toString() );
+
+        resultVO.setCode( WxInfoStausEnum.WX_GET.getCode() );
+        resultVO.setMsg( WxInfoStausEnum.WX_GET.getMessage() );
+        resultVO.setData( userInfo );
+
+        log.info( "resultVO:  " + resultVO.toString() );
+
+        return resultVO;
+    }
+
 }

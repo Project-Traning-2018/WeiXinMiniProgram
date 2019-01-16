@@ -1,11 +1,13 @@
 package com.byene.Controller;
 
 import com.byene.Dao.ActivityCollect;
+import com.byene.Dao.ActivityInfo;
 import com.byene.Enums.ActivityInfoStatusEnum;
 import com.byene.Enums.WxInfoStausEnum;
 import com.byene.Pojo.ResultVO;
 import com.byene.Pojo.WxInfo;
 import com.byene.Service.impl.ActivityCollectServiceImpl;
+import com.byene.Service.impl.ActivityInfoServiceImpl;
 import com.byene.Utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class ActivityCollectController {
 
     @Autowired
     ActivityCollectServiceImpl activityCollectService;
+
+    @Autowired
+    ActivityInfoServiceImpl  activityInfoService;
 
     @Autowired
     StringRedisTemplate strRedis;
@@ -102,9 +107,17 @@ public class ActivityCollectController {
 
         List< ActivityCollect > activityCollectList = activityCollectService.FindallByUserId( userId );
 
+        List< ActivityInfo > activityInfoList = new ArrayList<>();
+
+        for( ActivityCollect key: activityCollectList )
+        {
+            Integer activitykey = key.getUsercollectActivityid();
+            activityInfoList.add( activityInfoService.FindOnebyId( activitykey ) );
+        }
+
         resultVO.setCode( ActivityInfoStatusEnum.ACTIVITY_COLLECT_LIST_SUCCESS.getCode() );
         resultVO.setMsg( ActivityInfoStatusEnum.ACTIVITY_COLLECT_LIST_SUCCESS.getMessage() );
-        resultVO.setData( activityCollectList );
+        resultVO.setData( activityInfoList );
         return resultVO;
     }
 
@@ -114,6 +127,7 @@ public class ActivityCollectController {
     {
         ResultVO resultVO = new ResultVO();
         log.info( "userKey值:  " + userKey );
+        log.info( "activityId值:  " + activityId );
         /*userKey已过期,返回身份过期信息*/
         if( strRedis.opsForValue().get( userKey ) == null )
         {

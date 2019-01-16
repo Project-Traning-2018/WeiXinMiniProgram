@@ -52,7 +52,7 @@ create table `activity_collect`(
 ) character set = utf8;
 
 -- 活动参与人表
-create table `activity_memeber`(
+create table `activity_member`(
     `activity_joinid` int not null auto_increment comment '活动参与人编号',
     `activity_userid` varchar(64) not null comment '活动参与人openid',
     `activity_activityid` int not null comment '活动编号',

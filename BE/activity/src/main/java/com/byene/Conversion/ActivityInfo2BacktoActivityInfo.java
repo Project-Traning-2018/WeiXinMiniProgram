@@ -2,6 +2,7 @@ package com.byene.Conversion;
 
 import com.byene.Dao.ActivityInfo;
 import com.byene.Pojo.Activity.ActivityInfo2Back;
+import com.byene.Pojo.Activity.ActivityInfoUpdate2Back;
 import com.byene.Pojo.WxInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
