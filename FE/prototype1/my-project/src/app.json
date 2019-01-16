@@ -1,16 +1,18 @@
 {
   "pages": [
-    "pages/_launchActivityDetail/main",
-    "pages/home/main",
     "pages/login/main",
+    "pages/home/main",
     "pages/my/main",
-    "pages/_participateActivityDetail/main",
-    "pages/_collectActivityDetail/main",
-    "pages/newActivity/main",
+    "pages/launchActivityDetail/main",
+    "pages/participateActivityDetail/main",
+    "pages/collectActivityDetail/main",
+    "pages/updateActivity/main",
     "pages/user/main",
-    "pages/index/main",
+    "pages/version/main",
+    "pages/randomActivityDetail/main",
+    "pages/newActivity/main",
     "pages/suggestion/main",
-    "pages/logs/main"
+    "pages/testDistance/main"
   ],
   "tabBar": {
     "color": "#ccc",

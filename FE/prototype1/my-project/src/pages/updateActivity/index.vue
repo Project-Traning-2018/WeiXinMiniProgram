@@ -5,13 +5,13 @@
     <span id="act_type">请选择活动类型</span>
     <radio-group @change="handleRadioChange">
       <label for="type1"><input type="radio" name="type" value="1" id="type1">
-      Type 1</label>
+        Type 1</label>
       <label for="type2"><input type="radio" name="type" value="2" id="type2">
-      Type 2</label>
+        Type 2</label>
       <label for="type3"><input type="radio" name="type" value="3" id="type3">
-      Type 3</label>
+        Type 3</label>
       <label for="type4"><input type="radio" name="type" value="4" id="type4">
-      Type 4</label>
+        Type 4</label>
     </radio-group>
     <p class="date-time" id="sign-start">报名开始时间
       <view>
@@ -96,12 +96,37 @@
         activityOrganizer: '',
         activityOrganizerphonenumber: '',
         activityOrangizerid: '',
+        index: 0,
+        actinfo: {}
       }
     },
     computed: {
       activitySignStart() {
         return this.activitySignstartdate + ' ' + this.activitySignstarttime + ':00'
       }
+    },
+    onLoad(options) {
+      this.index = options.index
+      this.actinfo = this.globalData.launActList[this.index]
+      console.log(this.index)
+      console.log(this.actinfo)
+      this.activityType = this.actinfo.activityType
+      this.activityId = this.actinfo.activityId
+      this.activitySubject = this.actinfo.activitySubject
+      this.activityContent = this.actinfo.activityContent
+      this.activitySignstartdate = this.actinfo.activitySignstartdate.substring(0, 10)
+      this.activitySignstarttime = this.actinfo.activitySignstartdate.substring(11, 16)
+      this.activitySignenddate = this.actinfo.activitySignenddate.substring(0, 10)
+      this.activitySignendtime = this.actinfo.activitySignenddate.substring(11, 16)
+      this.activityStartdate = this.actinfo.activityStartdate.substring(0, 10)
+      this.activityStarttime = this.actinfo.activityStartdate.substring(11, 16)
+      this.activityEnddate = this.actinfo.activityEnddate.substring(0, 10)
+      this.activityEndtime = this.actinfo.activityEnddate.substring(11, 16)
+      this.activityFee = this.actinfo.activityFee
+      this.activityPeoplelimit = this.actinfo.activityPeoplelimit
+      this.activityAddressname = this.actinfo.activityAddressname
+      this.activityOrganizer = this.actinfo.activityOrganizer
+      this.activityOrganizerphonenumber = this.actinfo.activityOrganizerphonenumber
     },
     methods: {
       formatTime(e) {
@@ -114,7 +139,6 @@
         // console.log(e)
         this.activitySignstartdate = e.mp.detail.value
         console.log(this.activitySignstartdate)
-
       },
       handlechange2(e) {
         this.activitySignstarttime = e.mp.detail.value
@@ -133,7 +157,7 @@
         console.log(this.activityStartdate)
       },
       handlechange6(e) {
-        this.activityStarttime = e.mp.detail.value
+        this.activityStartime = e.mp.detail.value
         console.log(this.activityStarttime)
       },
       handlechange7(e) {
@@ -141,7 +165,7 @@
         console.log(this.activityEnddate)
       },
       handlechange8(e) {
-        this.activityEndtime = e.mp.detail.value
+        this.activitySignendtime = e.mp.detail.value
         console.log(this.activityEndtime)
       },
       handlechooseloca() {
@@ -159,6 +183,7 @@
       },
       handleSubmit() {
         console.log(this.activitySubject)
+        console.log(this.activityId)
         console.log(this.activityContent)
         console.log(this.activityType)
         console.log(this.activitySignstartdate)
@@ -177,15 +202,17 @@
         console.log(this.activityAddress)
         console.log(this.activityOrganizer)
         console.log(this.activityOrganizerphonenumber)
+        let that = this
         let data2send = {
-          'userIdMd5': this.globalData.id,
+          'userIdMd5': that.globalData.id,
+          'activityId': this.actinfo.activityId,
           'activityType': this.activityType,
           'activitySubject': this.activitySubject,
           'activityContent': this.activityContent,
           'activitySignstartdate': this.activitySignstartdate + ' ' +this.activitySignstarttime+':00',
           'activitySignenddate': this.activitySignenddate + ' ' +this.activitySignendtime+':00',
-         /* 'activitySignstarttime': this.activitySignstarttime,
-          'activitySignendtime': this.activitySignendtime,*/
+          /* 'activitySignstarttime': this.activitySignstarttime,
+           'activitySignendtime': this.activitySignendtime,*/
           'activityStartdate': this.activityStartdate + ' ' + this.activityStarttime+':00',
           'activityEnddate': this.activityEnddate + ' ' +this.activityEndtime+':00',
           /*'activityStarttime': this.activityStarttime,
@@ -199,46 +226,63 @@
           'activityOrganizer': this.activityOrganizer,
           'activityOrganizerphonenumber': this.activityOrganizerphonenumber,
         }
+        wx.showModal({
+          title: '提示',
+          content: '确认提交修改',
+          success(res) {
+            console.log(res)
+            if (res.confirm) {
+
+              that.$fly.interceptors.request.use((request) => {
+                request.headers = {
+                  'Content-Type': 'application/json'
+                };
+              })
+
+              that.$fly.get({
+                method: 'POST',
+                url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/update',/*contentType: 'application/json;charset=utf-8',*/
+                body: JSON.stringify(data2send)
+              }).then(function(res){
+                console.log(res)
+                if (res.data.msg === '活动更新成功') {
+                  wx.showToast({
+                    title: '发布成功',
+                    duration: 1000,
+                    mask: true,
+                    complete(){
+                      wx.switchTab({
+                        url: '../my/main?index='+that.index
+                      })
+                    }
+                  })
+                } else {
+                  wx.showToast({
+                    title: '发布失败，请稍后重试',
+                    duration: 1000
+                  })
+                }
+              })
+
+            } else {
+              console.log('用户点击了取消')
+            }
+          }
+        })
+
+
+
         console.log(data2send.activitySignstartdate)
         console.log(data2send.activitySignenddate)
         console.log(data2send.activityStartdate)
         console.log(data2send.activityEnddate)
         /* 发送 */
-        this.$fly.interceptors.request.use((request) => {
-          request.headers = {
-            'Content-Type': 'application/json'
-          };
-        })
-        wx.showLoading({
-          mask: true,
-          title: '加载中'
-        })
-        this.$fly.get({
-          method: 'POST',
-          url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/save',/*contentType: 'application/json;charset=utf-8',*/
-          body: JSON.stringify(data2send)
-        }).then(function(res){
-          console.log(res)
-          if (res.data.msg === '活动添加成功') {
-            wx.showToast({
-              title: '发布成功',
-              duration: 1000,
-              mask: true,
-              complete(){
-                wx.switchTab({
-                  url: '../my/main'
-                })
-              }
-            })
-          } else {
-            wx.showToast({
-              title: '发布失败，请稍后重试',
-              duration: 1000
-            })
-          }
-        })/*.catch(function () {
-          console.log('发送失败')
-        })*/
+
+        // wx.showLoading({
+        //   mask: true,
+        //   title: '加载中'
+        // })
+
 
       },
       handleRadioChange(e){
@@ -373,15 +417,15 @@
     text-align: center;
   }
   #act_fee {
-       height: 80rpx;
-       line-height: 80rpx;
-       padding-left: 25rpx;
-       padding-right: 25rpx;
-       font-size: 30rpx;
-       border-bottom: solid 3rpx #eee;
-       display: flex;
-       justify-content: space-between;
-     }
+    height: 80rpx;
+    line-height: 80rpx;
+    padding-left: 25rpx;
+    padding-right: 25rpx;
+    font-size: 30rpx;
+    border-bottom: solid 3rpx #eee;
+    display: flex;
+    justify-content: space-between;
+  }
   #act_fee>input {
     display: inline-block;
     height: 80rpx;
@@ -408,7 +452,7 @@
     justify-content: space-between;
     border-bottom: solid 15rpx #eee;
     padding-right: 25rpx;
-     }
+  }
   #act_hc>input {
     display: inline-block;
     height: 80rpx;

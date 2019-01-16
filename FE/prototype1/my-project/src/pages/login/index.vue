@@ -1,16 +1,15 @@
 <template>
   <div class="indexContainer">
-    <div class="mask">
-      <div class="img-container">
-        <image src="../../static/images/spinner.svg" class="loading"></image>
-        <p class="info">登录中</p>
-      </div>
-    </div>
+    <!--<div class="mask" v-if="notReady">-->
+      <!--<div class="img-container">-->
+        <!--<image src="../../static/images/spinner.svg" class="loading"></image>-->
+        <!--<p class="info">登录中</p>-->
+      <!--</div>-->
+    <!--</div>-->
     <image v-if="isShow" class="index_img" :src="userInfo.avatarUrl" alt=""></image>
     <Button class="btn" v-else
             open-type="getUserInfo"
-            @getuserinfo="getUserInfo"
-    >
+            @getuserinfo="getUserInfo">
       点击获取用户信息
     </Button>
     <p class="userName">Hello {{ userInfo.nickName }}</p>
@@ -27,29 +26,93 @@
       return {
         userInfo: {}, // 初始数据
         isShow: false, // 没有授权
-        notReady: this.globalData.id == undefined
       }
     },
+    watch: {
+
+    },
     beforeMount() {
-      // 获取用户登录信息
-      this.handleGetUserInfo();
+      let response
+      let that = this
+      wx.showLoading({
+        title: '登陆中',
+        mask: true,
+      })
+      wx.login({
+        success(res) {
+          console.log('第一次请求数据, 获取openid的MD5值')
+          console.log(res)
+          response = res
+          that.$fly.get({
+            method: 'POST',
+            url: 'http://activity103.mynatapp.cc/wx/wxlogin?code=' + response.code,
+          }).then(function (res) {
+            console.log(res.data.data)
+            that.globalData.id = res.data.data
+            console.log(that.globalData.id)
+            wx.hideLoading()
+            wx.getUserInfo({
+              success(res) {
+                console.log(res)
+                that.globalData.userInfo = res.userInfo
+                that.userInfo= res.userInfo
+                that.isShow = true;
+                that.$fly.interceptors.request.use((request) => {
+                  request.headers = {
+                    'Content-Type': 'application/json'
+                  };
+                })
+                let data2send = {
+                  userIdMd5 : that.globalData.id,
+                  userName: res.userInfo.nickName,
+                  userIcon: res.userInfo.avatarUrl,
+                  userPhonenumber: ''
+                }
+                console.log('要发送的数据: ')
+                console.log(data2send)
+                that.$fly.get({
+                  method: 'POST',
+                  url: 'http://activity103.mynatapp.cc/wx/wxuserinfo',
+                  body: JSON.stringify(data2send)
+                }).then(function(res){
+                  console.log(res.data)
+                })
+              },
+              fail() {
+                console.log('获取用户信息失败')
+              }
+            })
+          })
+        },
+        fail() {
+          wx.showToast({
+            title: '登陆失败，请尝试重启程序',
+            mask: true,
+            duration: 1000,
+            complete() {
+              wx.navigateBack({
+                delta: -1
+              })
+            }
+          })
+        }
+      })
     },
     methods: {
       // 获取用户登录信息
       handleGetUserInfo() {
         let that = this
         wx.getUserInfo({
-          success: (data)=>{
-            // console.log('data:' +JSON.stringify(data));
+          success(data){
             that.globalData.userInfo = data.userInfo;
+            that.userInfo= data.userInfo
             console.log('id: '+that.globalData.id)
             let data2send = {
               userIdMd5 : that.globalData.id,
               userName: data.userInfo.nickName,
-              userIcon: "this",
+              userIcon: data.userInfo.avatarUrl,
               userPhonenumber: ''
             }
-            console.log(JSON.stringify(data2send))
             that.$fly.interceptors.request.use((request) => {
               request.headers = {
                 'Content-Type': 'application/json'
@@ -57,28 +120,26 @@
             })
             that.$fly.get({
               method: 'POST',
-              url: 'http://activity103.mynatapp.cc/wx/wxuserinfo',/*contentType: 'application/json;charset=utf-8',*/
+              url: 'http://activity103.mynatapp.cc/wx/wxuserinfo',
               body: JSON.stringify(data2send)
             }).then(function(res){
               console.log(res.data)
             })
-            this.isShow = true;
+            that.isShow = true;
           },
-          fail: () => {
+          fail() {
             console.log('*****获取失败*****');
           }
         });
       },
-
       getUserInfo(data){
-        console.log('46' + JSON.stringify(data));
+        console.log(data)
         // 判断用户是否授权
         if (data.mp.detail.rawData) {
           // 用户授权
           this.handleGetUserInfo();
         }
       },
-
       handleTap(){
         wx.switchTab({
           url: '../home/main'

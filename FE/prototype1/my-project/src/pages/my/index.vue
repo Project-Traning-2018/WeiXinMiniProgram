@@ -20,51 +20,37 @@
       <swiper-item>
         <div class="card" v-for="(act, index) in actLaunByme" :index="index" @tap="toDetailLaunch">
           <p class="title">{{act.activitySubject}}</p>
-          <p><span class="key">地点</span><span class="value">{{act.activityAddressname}}</span></p>
+          <p><span class="key">地点</span><span class="value"></span></p>
+          <p class="value">{{act.activityAddressname}}</p>
           <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
-          <p><span class="key">报名时间</span><span class="value">{{act.activitySignDate}}</span></p>
-          <p><span class="key">报名活动</span><span class="value">{{act.activityDate}}</span></p>
-        </div>
-        <div class="card">
-          <p class="title">标题</p>
-          <p><span class="key">地点</span><span class="value">55555555555</span></p>
-          <p><span class="key">类别</span><span class="value">4565698</span></p>
-          <p><span class="key">报名时间</span><span class="value">5465555</span></p>
-          <p><span class="key">报名活动</span><span class="value">"1234561"</span></p>
-        </div>
-        <div class="card">
-          <p class="title">标题</p>
-          <p>地点</p>
-          <p>时间</p>
-        </div>
-        <div class="card">
-          <p class="title">标题</p>
-          <p>地点</p>
-          <p>时间</p>
-        </div>
-        <div class="card">
-          <p  class="title">标题</p>
-          <p>地点</p>
-          <p>时间</p>
-        </div>
-        <div class="card">
-          <p class="title">标题</p>
-          <p>地点</p>
-          <p>时间</p>
+          <p><span class="key">报名时间</span><span class="value"></span></p>
+          <p class="value">{{act.processedSignDate}}</p>
+          <p><span class="key">报名活动</span><span class="value"></span></p>
+          <p class="value">{{act.processedDate}}</p>
         </div>
       </swiper-item>
       <swiper-item>
-        <div class="card">
-          <p>标题</p>
-          <p>地点</p>
-          <p>时间</p>
+        <div class="card" v-for="(act, index) in actPartByme" :index="index" @tap="toDetailParticipate">
+          <p class="title">{{act.activitySubject}}</p>
+          <p><span class="key">地点</span><span class="value"></span></p>
+          <p class="value">{{act.activityAddressname}}</p>
+          <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
+          <p><span class="key">报名时间</span><span class="value"></span></p>
+          <p class="value">{{act.processedSignDate}}</p>
+          <p><span class="key">报名活动</span><span class="value"></span></p>
+          <p class="value">{{act.processedDate}}</p>
         </div>
       </swiper-item>
       <swiper-item>
-        <div class="card">
-          <p>标题</p>
-          <p>地点</p>
-          <p>事件</p>
+        <div class="card" v-for="(act, index) in actCollByme" :index="index" @tap="toDetailCollect">
+          <p class="title">{{act.activitySubject}}</p>
+          <p><span class="key">地点</span><span class="value"></span></p>
+          <p class="value">{{act.activityAddressname}}</p>
+          <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
+          <p><span class="key">报名时间</span><span class="value"></span></p>
+          <p class="value">{{act.processedSignDate}}</p>
+          <p><span class="key">报名活动</span><span class="value"></span></p>
+          <p class="value">{{act.processedDate}}</p>
         </div>
       </swiper-item>
     </swiper>
@@ -102,8 +88,59 @@
             activityDate: '明天'
           },
         ], // 我发起的活动列表
-        actPartByme: [], // 我参与的活动列表
-        actCollByme: [], // 我收藏的活动列表
+        actPartByme: [
+          {
+            activitySubject: '活动1',
+            activityAddressname: '活动1',
+            activityType: '活动1',
+            activitySignDate: '活动1',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动2',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动3',
+            activityAddressname: '活动1',
+            activityType: '活动1',
+            activitySignDate: '活动1',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动3',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+        ], // 我参与的活动列表
+        actCollByme: [
+          {
+            activitySubject: '活动2',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动3',
+            activityAddressname: '活动1',
+            activityType: '活动1',
+            activitySignDate: '活动1',
+            activityDate: '明天'
+          },
+          {
+            activitySubject: '活动3',
+            activityAddressname: '活动2',
+            activityType: '活动2',
+            activitySignDate: '活动2',
+            activityDate: '明天'
+          },
+        ], // 我收藏的活动列表
       }
     },
     methods: {
@@ -122,23 +159,23 @@
       toDetailLaunch($event) {
         let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
         wx.navigateTo({
-          url: '../_launchActivityDetail/main?index='+index
+          url: '../launchActivityDetail/main?index='+index
         })
       },
       toDetailParticipate($event) {
         let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
         wx.navigateTo({
-          url: '../_participateActivityDetail/main?index='+index
+          url: '../participateActivityDetail/main?index='+index
         })
       },
       toDetailCollect($event) {
         let index = parseInt($event.currentTarget.dataset.eventid.charAt(2));
         wx.navigateTo({
-          url: '../_collectActivityDetail/main?index='+index
+          url: '../collectActivityDetail/main?index='+index
         })
       },
     },
-    onLoad() {
+    onShow() {
       /* 保存对this(Vue实例)的引用 */
       let that = this
       /* 设置加载动画 */
@@ -149,16 +186,48 @@
       /*promise*/
       this.$fly.get({
         method: 'POST',
-        url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/listbyid'+'?userKey='+'jiguochang',/*contentType: 'application/json;charset=utf-8',*/
+        url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/listbyid'+'?userKey='+this.globalData.id,/*contentType: 'application/json;charset=utf-8',*/
         // body: JSON.stringify(data2send)
       }).then(function(res){
-        console.log(res.data)
+        that.actLaunByme =  res.data.data
+        that.globalData.launActList = res.data.data
+        console.log(that.globalData.launActList)
+        for (let i = 0;i < that.actLaunByme.length;i++) {
+          that.actLaunByme[i].processedSignDate = that.actLaunByme[i].activitySignstartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actLaunByme[i].activitySignenddate.replace('T', ' ').substring(0, 16)
+          that.actLaunByme[i].processedDate = that.actLaunByme[i].activityStartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actLaunByme[i].activityEnddate.replace('T', ' ').substring(0, 16)
+        }
         return that.$fly.get({
           method: 'POST',
-          url: 'xxx'
+          url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/participatelist?userKey=' + that.globalData.id,
         })
       }).then(function (res) {
-        
+        console.log('返回的参加活动列表')
+        console.log(res)
+        that.actPartByme = res.data.data
+        that.globalData.partActList = res.data.data
+        for (let i = 0;i < that.actPartByme.length;i++) {
+          that.actPartByme[i].processedSignDate = that.actPartByme[i].activitySignstartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actPartByme[i].activitySignenddate.replace('T', ' ').substring(0, 16)
+          that.actPartByme[i].processedDate = that.actPartByme[i].activityStartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actPartByme[i].activityEnddate.replace('T', ' ').substring(0, 16)
+        }
+        return that.$fly.get({
+          method: 'POST',
+          url: 'http://activity103.mynatapp.cc/miniapp/activitycollect/list?userKey=' + that.globalData.id,
+        })
+      }).then(function (res) {
+        console.log('返回的收藏活动列表')
+        console.log(res)
+        that.actCollByme = res.data.data
+        that.globalData.collActList = res.data.data
+        for (let i = 0;i < that.actCollByme.length;i++) {
+          that.actCollByme[i].processedSignDate = that.actCollByme[i].activitySignstartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actCollByme[i].activitySignenddate.replace('T', ' ').substring(0, 16)
+          that.actCollByme[i].processedDate = that.actCollByme[i].activityStartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actCollByme[i].activityEnddate.replace('T', ' ').substring(0, 16)
+        }
       })
     }
   }
@@ -230,5 +299,9 @@
   .key {
     display: inline-block;
     width: 160rpx;
+  }
+  .value {
+    text-align: right;
+    font-size: 28rpx;
   }
 </style>
