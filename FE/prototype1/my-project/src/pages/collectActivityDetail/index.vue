@@ -1,29 +1,138 @@
 <template>
   <div class="detailContainer">
-    <p><span class="key">活动名称</span><span class="value">活动名称</span></p>
+    <p><span class="key">活动名称</span><span class="value">{{actinfo.activitySubject}}</span></p>
     <p><span class="key">活动详情</span></p>
-    <textarea name="" id=""></textarea>
-    <p><span class="key">活动类型</span><span class="value">类型一</span></p>
-    <p><span class="key">报名开始时间</span><span class="value time">2018-09-01 11:22:33</span></p>
-    <p><span class="key">报名截止时间</span><span class="value time">2018-09-01 11:22:33</span></p>
-    <p><span class="key">活动开始时间</span><span class="value time">2018-09-01 11:22:33</span></p>
-    <p><span class="key">活动截止时间</span><span class="value time">2018-09-01 11:22:33</span></p>
-    <p><span class="key">活动地址</span><span class="value">云苑大酒店</span></p>
-    <p><span class="key">报名费用</span><span class="value">30</span></p>
-    <p><span class="key">报名人数限制</span><span class="value">30</span></p>
-    <p><span class="key">已报名用户</span></p>
-    <p><span class="key">活动发起人</span><span class="value">是是是</span></p>
-    <p><span class="key">发起人联系方式</span><span class="value">12345678901</span></p>
-    <p class="btns"><button id="update">参加</button><button id="delete">取消收藏</button></p>
+    <textarea name="" id="" disabled>{{actinfo.activityContent}}</textarea>
+    <p><span class="key">活动类型</span><span class="value">{{actinfo.activityType}}</span></p>
+    <p><span class="key">报名开始时间</span><span class="value time">{{processedSignStartDate}}</span></p>
+    <p><span class="key">报名截止时间</span><span class="value time">{{processedSignEndDate}}</span></p>
+    <p><span class="key">活动开始时间</span><span class="value time">{{processedStartDate}}</span></p>
+    <p><span class="key">活动截止时间</span><span class="value time">{{processedEndDate}}</span></p>
+    <p id="act_addr"><span>活动地点</span></p>
+    <p id="show_addr"><span>{{actinfo.activityAddressname}}</span><img src="../../../static/images/loca.png" alt=""></p>
+    <p><span class="key">报名费用</span><span class="value">{{actinfo.activityFee}}</span></p>
+    <p><span class="key">报名人数限制</span><span class="value">{{actinfo.activityPeoplelimit}}</span></p>
+    <p><span class="key">已报名人数</span><span class="value">{{actinfo.activityPeopleregistered}}</span></p>
+    <p><span class="key">活动发起人</span><span class="value">{{actinfo.activityOrganizer}}</span></p>
+    <p><span class="key">发起人联系方式</span><span class="value">{{actinfo.activityOrganizerphonenumber}}</span></p>
+    <p class="btns"><button id="update" @tap="handleSignup">参加</button><button id="delete" @tap="handleCollectCancel">取消收藏</button></p>
   </div>
 </template>
 
 <script>
     export default {
-        name: "index",
-        onLoad(options) {
-          console.log(options)
+      name: "index",
+      data() {
+        return {
+          actinfo: {},
+          index: 0,
         }
+      },
+      computed: {
+        processedSignStartDate() {
+          return this.actinfo.activitySignstartdate.replace('T', ' ').substring(0, 16)
+        },
+        processedSignEndDate() {
+          return this.actinfo.activitySignenddate.replace('T', ' ').substring(0, 16)
+        },
+        processedStartDate() {
+          return this.actinfo.activityStartdate.replace('T', ' ').substring(0, 16)
+        },
+        processedEndDate() {
+          return this.actinfo.activityEnddate.replace('T', ' ').substring(0, 16)
+        },
+      },
+      onLoad(options) {
+        console.log(options)
+        this.index = parseInt(options.index)
+        this.actinfo = this.globalData.partActList[this.index]
+      },
+      methods: {
+        handleSignup() {
+          console.log('Tapped')
+          // todo
+          let that = this
+          wx.showModal({
+            title: '提示',
+            content: '确认参加活动',
+            success(res) {
+              if (res.confirm) {
+                let data2send = {
+                  'userIdMd5': that.globalData.id,
+                  'activityId': that.actinfo.activityId
+                }
+                that.$fly.interceptors.request.use((request) => {
+                  request.headers = {
+                    'Content-Type': 'application/json'
+                  };
+                })
+                that.$fly.get({
+                  method: 'POST',
+                  url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/participate',
+                  body: JSON.stringify(data2send)
+                }).then(function(res){
+                  console.log(res)
+                  if (res.data.msg === '活动取消参加成功') {
+                    wx.showToast({
+                      title: '退出成功',
+                      duration: 1000,
+                      mask: true,
+                      complete(){
+                        wx.switchTab({
+                          url: '../my/main'
+                        })
+                      }
+                    })
+                  } else {
+                    wx.showToast({
+                      title: '退出失败，请稍后重试',
+                      duration: 1000
+                    })
+                  }
+                })
+              } else {
+                console.log('用户点击了取消')
+              }
+            }
+          })
+
+        },
+        handleCollectCancel() {
+          let that = this
+          wx.showModal({
+            title: '提示',
+            content: '确认取消收藏',
+            success(res){
+              if (res.confirm) {
+                that.$fly.get({
+                  method: 'POST',
+                  url: 'http://activity103.mynatapp.cc/miniapp/activitycollect/delete?userKey='+that.globalData.id+
+                  '&activityId='+that.actinfo.activityId,
+                }).then(function(res){
+                  console.log(res)
+                  if (res.data.msg === '删除收藏活动成功') {
+                    wx.showToast({
+                      title: '取消收藏成功',
+                      duration: 1000,
+                      mask: true,
+                      complete(){
+                        wx.switchTab({
+                          url: '../my/main'
+                        })
+                      }
+                    })
+                  } else {
+                    wx.showToast({
+                      title: '操作失败，请稍后重试',
+                      duration: 1000
+                    })
+                  }
+                })
+              }
+            }
+          })
+        }
+      }
     }
 </script>
 
@@ -82,6 +191,20 @@
   }
   button::after {
     border: none;
+  }
+  #show_addr span {
+    display: inline-block;
+    width: 540rpx;
+    text-align: right;
+    line-height: 80rpx;
+    font-size: 28rpx;
+  }
+  #show_addr img {
+    height: 40rpx;
+    width: 40rpx;
+    margin: 20rpx 0;
+    position: absolute;
+    right: 14px;
   }
   #update {
     background-color: #2db7f5;

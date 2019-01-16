@@ -1,23 +1,5 @@
 <template>
   <div>
-    <!--activityType: '',-->
-    <!--activitySubject: '',-->
-    <!--activityContent: '',-->
-    <!--activitySignstartdate: '',-->
-    <!--activitySignenddate: '',-->
-    <!--activitySignstarttime: '',-->
-    <!--activitySignendtime: '',-->
-    <!--activityStartdate: '',-->
-    <!--activityEnddate: '',-->
-    <!--activityFee: 0,-->
-    <!--activityPeoplelimit: 0,-->
-    <!--activityAddress: '',-->
-    <!--activityAddressname: '选择地点',-->
-    <!--activityLongitude: 0,-->
-    <!--activityLatitude: 0,-->
-    <!--activityOrganizer: '',-->
-    <!--activityOrganizerphonenumber: '',-->
-    <!--activityOrangizerid: '',-->
     <input type="text" id="act_sub" placeholder="请输入标题" v-model="activitySubject"><br>
     <textarea id="act_con" placeholder="请输入详细信息" v-model="activityContent"></textarea>
     <span id="act_type">请选择活动类型</span>
@@ -81,7 +63,8 @@
     </p>
     <p id="act_fee"><span>报名费用</span><span id="fee"><input type="digit" maxlength="10" value=0 v-model="activityFee">元</span></p>
     <p id="act_hc"><span>人数限制</span><span id="hc"><input type="number" maxlength="4" placeholder="填写报名人数" v-model="activityPeoplelimit">人</span></p>
-    <p id="act_addr"><span>活动地点</span><button @tap="handlechooseloca"><span>{{activityAddressname}}</span><img src="../../../static/images/loca.png" alt=""></button></p>
+    <p id="act_addr"><span>活动地点</span></p>
+    <p id="show_addr"><button @tap="handlechooseloca"><span>{{activityAddressname}}</span><img src="../../../static/images/loca.png" alt=""></button></p>
     <p id="act_man_name"><span>发起人姓名</span><input type="text" placeholder="请填写发起人姓名" v-model="activityOrganizer"></p>
     <p id="act_man_phone"><span>发起人电话</span><input type="text" maxlength="11" placeholder="请填写发起人电话" v-model="activityOrganizerphonenumber"></p>
     <button id="sub" @tap="handleSubmit">确 认</button>
@@ -150,7 +133,7 @@
         console.log(this.activityStartdate)
       },
       handlechange6(e) {
-        this.activityStartime = e.mp.detail.value
+        this.activityStarttime = e.mp.detail.value
         console.log(this.activityStarttime)
       },
       handlechange7(e) {
@@ -158,7 +141,7 @@
         console.log(this.activityEnddate)
       },
       handlechange8(e) {
-        this.activitySignendtime = e.mp.detail.value
+        this.activityEndtime = e.mp.detail.value
         console.log(this.activityEndtime)
       },
       handlechooseloca() {
@@ -195,7 +178,7 @@
         console.log(this.activityOrganizer)
         console.log(this.activityOrganizerphonenumber)
         let data2send = {
-          'userIdMd5': 'jiguochang',
+          'userIdMd5': this.globalData.id,
           'activityType': this.activityType,
           'activitySubject': this.activitySubject,
           'activityContent': this.activityContent,
@@ -235,14 +218,15 @@
           url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/save',/*contentType: 'application/json;charset=utf-8',*/
           body: JSON.stringify(data2send)
         }).then(function(res){
-          if (parseInt(res.code) === 0) {
+          console.log(res)
+          if (res.data.msg === '活动添加成功') {
             wx.showToast({
               title: '发布成功',
               duration: 1000,
               mask: true,
               complete(){
-                wx.navigateTo({
-                  url: '../launchActivityDetail/main'
+                wx.switchTab({
+                  url: '../my/main'
                 })
               }
             })
@@ -252,7 +236,9 @@
               duration: 1000
             })
           }
-        })
+        })/*.catch(function () {
+          console.log('发送失败')
+        })*/
 
       },
       handleRadioChange(e){
@@ -445,16 +431,19 @@
     line-height: 80rpx;
     padding-left: 25rpx;
     font-size: 30rpx;
-    border-bottom: solid 15rpx #eee;
     justify-content: space-between;
+    border-bottom: solid 3rpx #eee;
   }
-  #act_addr>button {
+  #show_addr {
+    border-bottom: solid 15rpx #eee;
+  }
+  #show_addr>button {
     margin: 0;
     border: none;
     background-color: #ffffff;
     display: inline-block;
     height: 80rpx;
-    width: 500rpx;
+    width: 100%;
     line-height: 80rpx;
     font-size: 30rpx;
     box-shadow: none;
@@ -464,13 +453,13 @@
     text-align: right;
     position: relative;
   }
-  #act_addr>button::after{ border: none; }
-  #act_addr>button span {
+  #show_addr>button::after{ border: none; }
+  #show_addr>button span {
     display: inline-block;
-    width: 400rpx;
+    width: 650rpx;
     text-align: right;
   }
-  #act_addr>button img {
+  #show_addr>button img {
     height: 40rpx;
     width: 40rpx;
     margin: 20rpx 0;

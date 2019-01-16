@@ -20,28 +20,37 @@
       <swiper-item>
         <div class="card" v-for="(act, index) in actLaunByme" :index="index" @tap="toDetailLaunch">
           <p class="title">{{act.activitySubject}}</p>
-          <p><span class="key">地点</span><span class="value">{{act.activityAddressname}}</span></p>
+          <p><span class="key">地点</span><span class="value"></span></p>
+          <p class="value">{{act.activityAddressname}}</p>
           <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
-          <p><span class="key">报名时间</span><span class="value">{{act.activitySignDate}}</span></p>
-          <p><span class="key">报名活动</span><span class="value">{{act.activityDate}}</span></p>
+          <p><span class="key">报名时间</span><span class="value"></span></p>
+          <p class="value">{{act.processedSignDate}}</p>
+          <p><span class="key">报名活动</span><span class="value"></span></p>
+          <p class="value">{{act.processedDate}}</p>
         </div>
       </swiper-item>
       <swiper-item>
         <div class="card" v-for="(act, index) in actPartByme" :index="index" @tap="toDetailParticipate">
           <p class="title">{{act.activitySubject}}</p>
-          <p><span class="key">地点</span><span class="value">{{act.activityAddressname}}</span></p>
+          <p><span class="key">地点</span><span class="value"></span></p>
+          <p class="value">{{act.activityAddressname}}</p>
           <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
-          <p><span class="key">报名时间</span><span class="value">{{act.activitySignDate}}</span></p>
-          <p><span class="key">报名活动</span><span class="value">{{act.activityDate}}</span></p>
+          <p><span class="key">报名时间</span><span class="value"></span></p>
+          <p class="value">{{act.processedSignDate}}</p>
+          <p><span class="key">报名活动</span><span class="value"></span></p>
+          <p class="value">{{act.processedDate}}</p>
         </div>
       </swiper-item>
       <swiper-item>
         <div class="card" v-for="(act, index) in actCollByme" :index="index" @tap="toDetailCollect">
           <p class="title">{{act.activitySubject}}</p>
-          <p><span class="key">地点</span><span class="value">{{act.activityAddressname}}</span></p>
+          <p><span class="key">地点</span><span class="value"></span></p>
+          <p class="value">{{act.activityAddressname}}</p>
           <p><span class="key">类别</span><span class="value">{{act.activityType}}</span></p>
-          <p><span class="key">报名时间</span><span class="value">{{act.activitySignDate}}</span></p>
-          <p><span class="key">报名活动</span><span class="value">{{act.activityDate}}</span></p>
+          <p><span class="key">报名时间</span><span class="value"></span></p>
+          <p class="value">{{act.processedSignDate}}</p>
+          <p><span class="key">报名活动</span><span class="value"></span></p>
+          <p class="value">{{act.processedDate}}</p>
         </div>
       </swiper-item>
     </swiper>
@@ -166,7 +175,7 @@
         })
       },
     },
-    onLoad() {
+    onShow() {
       /* 保存对this(Vue实例)的引用 */
       let that = this
       /* 设置加载动画 */
@@ -177,18 +186,48 @@
       /*promise*/
       this.$fly.get({
         method: 'POST',
-        url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/listbyid'+'?userKey='+'jiguochang',/*contentType: 'application/json;charset=utf-8',*/
+        url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/listbyid'+'?userKey='+this.globalData.id,/*contentType: 'application/json;charset=utf-8',*/
         // body: JSON.stringify(data2send)
       }).then(function(res){
         that.actLaunByme =  res.data.data
         that.globalData.launActList = res.data.data
         console.log(that.globalData.launActList)
+        for (let i = 0;i < that.actLaunByme.length;i++) {
+          that.actLaunByme[i].processedSignDate = that.actLaunByme[i].activitySignstartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actLaunByme[i].activitySignenddate.replace('T', ' ').substring(0, 16)
+          that.actLaunByme[i].processedDate = that.actLaunByme[i].activityStartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actLaunByme[i].activityEnddate.replace('T', ' ').substring(0, 16)
+        }
         return that.$fly.get({
           method: 'POST',
-          url: 'xxx'
+          url: 'http://activity103.mynatapp.cc/miniapp/activityinfo/participatelist?userKey=' + that.globalData.id,
         })
       }).then(function (res) {
-        
+        console.log('返回的参加活动列表')
+        console.log(res)
+        that.actPartByme = res.data.data
+        that.globalData.partActList = res.data.data
+        for (let i = 0;i < that.actPartByme.length;i++) {
+          that.actPartByme[i].processedSignDate = that.actPartByme[i].activitySignstartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actPartByme[i].activitySignenddate.replace('T', ' ').substring(0, 16)
+          that.actPartByme[i].processedDate = that.actPartByme[i].activityStartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actPartByme[i].activityEnddate.replace('T', ' ').substring(0, 16)
+        }
+        return that.$fly.get({
+          method: 'POST',
+          url: 'http://activity103.mynatapp.cc/miniapp/activitycollect/list?userKey=' + that.globalData.id,
+        })
+      }).then(function (res) {
+        console.log('返回的收藏活动列表')
+        console.log(res)
+        that.actCollByme = res.data.data
+        that.globalData.collActList = res.data.data
+        for (let i = 0;i < that.actCollByme.length;i++) {
+          that.actCollByme[i].processedSignDate = that.actCollByme[i].activitySignstartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actCollByme[i].activitySignenddate.replace('T', ' ').substring(0, 16)
+          that.actCollByme[i].processedDate = that.actCollByme[i].activityStartdate.replace('T', ' ').substring(0, 16) + ' - ' +
+            that.actCollByme[i].activityEnddate.replace('T', ' ').substring(0, 16)
+        }
       })
     }
   }
@@ -260,5 +299,9 @@
   .key {
     display: inline-block;
     width: 160rpx;
+  }
+  .value {
+    text-align: right;
+    font-size: 28rpx;
   }
 </style>
