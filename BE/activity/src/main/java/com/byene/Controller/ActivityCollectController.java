@@ -127,6 +127,7 @@ public class ActivityCollectController {
     {
         ResultVO resultVO = new ResultVO();
         log.info( "userKey值:  " + userKey );
+        log.info( "activityId值:  " + activityId );
         /*userKey已过期,返回身份过期信息*/
         if( strRedis.opsForValue().get( userKey ) == null )
         {
