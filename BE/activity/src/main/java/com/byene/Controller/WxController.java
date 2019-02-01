@@ -61,7 +61,7 @@ public class WxController {
         return resultVO;
     }
 
-    @PostMapping( value = { "/wxuserinfo", "/wxuserinfoupdate" } )
+    @PostMapping( "wxuserinfo" )
     public ResultVO WxUserinfo(@RequestBody UserInfo2Back userInfo2Back )
     {
         log.info( "用户信息表段:  " + userInfo2Back.toString() );
@@ -77,13 +77,56 @@ public class WxController {
             return resultVO;
         }
 
-        /*userKey未过期,将openid和用户信息存储到mysql中*/
-        UserInfo userInfo = new UserInfo();
         WxInfo Wxresult = JsonUtils.jsonToPojo( strRedis.opsForValue().get( userKey ), WxInfo.class );
 
-        userInfo.setUserId( Wxresult.getOpenid() );
-        userInfo.setUserName( userInfo2Back.getUserName() );
-        userInfo.setUserIcon( userInfo2Back.getUserIcon() );
+        String UserKey = Wxresult.getOpenid();
+
+        UserInfo userInfo = userInfoService.FindOneById( UserKey );
+
+        if( userInfo == null )
+        {
+            userInfo = new UserInfo();
+            userInfo.setUserId( Wxresult.getOpenid() );
+            userInfo.setUserName( userInfo2Back.getUserName() );
+            userInfo.setUserIcon( userInfo2Back.getUserIcon() );
+            userInfo.setUserPhonenumber( userInfo2Back.getUserPhonenumber() );
+        }
+        else
+        {
+            userInfo.setUserName( userInfo2Back.getUserName() );
+            userInfo.setUserIcon( userInfo2Back.getUserIcon() );
+        }
+
+        /*返回用户信息保存成功*/
+
+        resultVO.setCode( WxInfoStausEnum.WX_SAVE.getCode() );
+        resultVO.setMsg( WxInfoStausEnum.WX_SAVE.getMessage() );
+        return resultVO;
+    }
+
+    @PostMapping( "wxuserinfoupdate" )
+    public ResultVO WxUserinfoUpdate(@RequestBody UserInfo2Back userInfo2Back )
+    {
+        log.info( "用户信息表段:  " + userInfo2Back.toString() );
+        ResultVO resultVO = new ResultVO();
+        /*在redis中查询userKey*/
+        String userKey = userInfo2Back.getUserIdMd5();
+        log.info( "userKey值:  " + userKey );
+        /*userKey已过期,返回身份过期信息*/
+        if( strRedis.opsForValue().get( userKey ) == null )
+        {
+            resultVO.setCode( WxInfoStausEnum.WX_ERROR.getCode() );
+            resultVO.setMsg( WxInfoStausEnum.WX_ERROR.getMessage() );
+            return resultVO;
+        }
+
+        /*userKey未过期,将openid和用户信息存储到mysql中*/
+        WxInfo Wxresult = JsonUtils.jsonToPojo( strRedis.opsForValue().get( userKey ), WxInfo.class );
+
+        String UserKey = Wxresult.getOpenid();
+
+        UserInfo userInfo = userInfoService.FindOneById( UserKey );
+
         userInfo.setUserPhonenumber( userInfo2Back.getUserPhonenumber() );
         userInfoService.save( userInfo );
 

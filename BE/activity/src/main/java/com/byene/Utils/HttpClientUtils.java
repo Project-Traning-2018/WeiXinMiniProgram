@@ -33,7 +33,7 @@ public class HttpClientUtils {
         String resultString = "";
         CloseableHttpResponse response = null;
         try {
-            // 创建uri
+            // 创建url
             URIBuilder builder = new URIBuilder(url);
             if (param != null) {
                 for (String key : param.keySet()) {

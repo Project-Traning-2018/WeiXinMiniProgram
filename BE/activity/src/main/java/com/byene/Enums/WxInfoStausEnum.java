@@ -10,7 +10,8 @@ public enum  WxInfoStausEnum {
     WX_ERROR( 2, "身份已过期" ),
     WX_UPDATE( 3, "用户信息更新成功" ),
     WX_GET( 4, "用户信息获取成功" ),
-    SUGGESTION_SUCCESS( 5, "用户建议提交成功" )
+    SUGGESTION_SUCCESS( 5, "用户建议提交成功" ),
+    WX_SAVE( 6, "用户信息保存成功" ),
     ;
 
 

@@ -34,7 +34,7 @@ public class ActivityCheck {
 
         for( ActivityInfo key: activityInfoList )
         {
-            if( CurrentTime.before( key.getActivitySignenddate() ) )
+            if( CurrentTime.before( key.getActivitySignstartdate() ) || CurrentTime.after( key.getActivitySignenddate() ) )
             {
                 key.setActivityValid( ActivityInfoStatusEnum.ACTIVITY_INVALID.getCode() );
                 activityInfoService.save( key );
