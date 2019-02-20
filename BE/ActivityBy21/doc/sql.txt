@@ -1,0 +1,91 @@
+CREATE TABLE `activity_collect` (
+  `usercollect_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '收藏编号',
+  `usercollect_userid` varchar(64) NOT NULL COMMENT '活动收藏者openid',
+  `usercollect_activityid` int(11) NOT NULL COMMENT '收藏活动编号',
+  PRIMARY KEY (`usercollect_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `activity_info` (
+  `activity_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动编号',
+  `activity_type` int(11) NOT NULL COMMENT '活动类型',
+  `activity_subject` varchar(512) NOT NULL COMMENT '活动主题',
+  `activity_content` varchar(1024) NOT NULL COMMENT '活动内容',
+  `activity_signstartdate` datetime NOT NULL COMMENT '活动报名开始时间',
+  `activity_signenddate` datetime NOT NULL COMMENT '活动报名结束时间',
+  `activity_startdate` datetime NOT NULL COMMENT '活动开始时间',
+  `activity_enddate` datetime NOT NULL COMMENT '活动结束时间',
+  `activity_fee` int(11) DEFAULT NULL COMMENT '活动费用',
+  `activity_peoplelimit` int(11) NOT NULL COMMENT '活动总人数',
+  `activity_peopleregistered` int(11) NOT NULL DEFAULT '0' COMMENT '活动已报名人数',
+  `activity_address` varchar(1024) NOT NULL COMMENT '活动地址',
+  `activity_addressname` varchar(1024) NOT NULL COMMENT '活动地址名称',
+  `activity_longitude` decimal(20,10) NOT NULL COMMENT '活动地址经度',
+  `activity_latitude` decimal(20,10) NOT NULL COMMENT '活动地址纬度',
+  `activity_organizer` varchar(512) NOT NULL COMMENT '活动组织者姓名',
+  `activity_organizerphonenumber` varchar(32) DEFAULT NULL COMMENT '活动组织者手机号',
+  `activity_organizerid` varchar(64) NOT NULL COMMENT '活动组织者openid',
+  `activity_valid` int(11) NOT NULL DEFAULT '0' COMMENT '活动有效性',
+  `activity_imageurl1` varchar(1024) DEFAULT NULL COMMENT '活动图片1',
+  `activity_imageurl2` varchar(1024) DEFAULT NULL COMMENT '活动图片2',
+  `activity_imageurl3` varchar(1024) DEFAULT NULL COMMENT '活动图片3',
+  `activityparticipation_item1` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目1',
+  `activityparticipation_item2` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目2',
+  `activityparticipation_item3` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目3',
+  `activityparticipation_item4` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目4',
+  `activityparticipation_item5` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目5',
+  `activityparticipation_item6` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目6',
+  `activityparticipation_item7` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目7',
+  `activityparticipation_item8` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目8',
+  `activityparticipation_item9` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目9',
+  `activityparticipation_item10` varchar(1024) DEFAULT NULL COMMENT '活动报名信息项目10',
+  PRIMARY KEY (`activity_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `activity_member` (
+  `activity_joinid` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动参与人编号',
+  `activity_userid` varchar(64) NOT NULL COMMENT '活动参与人openid',
+  `activity_activityid` int(11) NOT NULL COMMENT '活动编号',
+  PRIMARY KEY (`activity_joinid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `manager_info` (
+  `manager_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '管理员编号',
+  `manager_nickname` varchar(64) NOT NULL COMMENT '管理员昵称',
+  `manager_loginno` varchar(64) NOT NULL COMMENT '管理员账号',
+  `manager_password` varchar(64) NOT NULL COMMENT '管理员密码',
+  PRIMARY KEY (`manager_id`),
+  UNIQUE KEY `manager_loginno` (`manager_loginno`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_info` (
+  `user_id` varchar(64) NOT NULL COMMENT '用户openid',
+  `user_name` varchar(512) NOT NULL COMMENT '用户姓名',
+  `user_icon` varchar(512) DEFAULT NULL COMMENT '用户头像',
+  `user_phonenumber` varchar(32) DEFAULT NULL COMMENT '用户手机号',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_suggestion` (
+  `suggestion_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '建议编号',
+  `user_id` varchar(64) NOT NULL COMMENT '用户openid',
+  `suggestion_content` varchar(1024) NOT NULL COMMENT '建议内容',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`suggestion_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `userparticipation_info` (
+  `userparticipation_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户参与编号',
+  `userparticipation_activityid` int(11) NOT NULL COMMENT '用户报名信息活动编号',
+  `userparticipation_userid` varchar(64) NOT NULL COMMENT '用户openid',
+  `userparticipation_item1` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目1',
+  `userparticipation_item2` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目2',
+  `userparticipation_item3` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目3',
+  `userparticipation_item4` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目4',
+  `userparticipation_item5` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目5',
+  `userparticipation_item6` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目6',
+  `userparticipation_item7` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目7',
+  `userparticipation_item8` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目8',
+  `userparticipation_item9` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目9',
+  `userparticipation_item10` varchar(1024) DEFAULT NULL COMMENT '用户报名信息项目10',
+  PRIMARY KEY (`userparticipation_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
