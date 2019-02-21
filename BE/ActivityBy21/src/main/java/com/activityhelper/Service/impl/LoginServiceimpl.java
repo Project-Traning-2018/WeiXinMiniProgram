@@ -9,6 +9,7 @@ import com.activityhelper.Pojo.ResultVO;
 import com.activityhelper.Service.LoginService;
 import com.activityhelper.Utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -57,8 +58,10 @@ public class LoginServiceimpl implements LoginService {
 
         strRedis.opsForValue().set( UserLog, JsonUtils.objectToJson( backManagerInfo ),60*100, TimeUnit.SECONDS );
 
-        return getResultVOInfo.GetResultVO( ManagerInfoStatusEnum.LOGIN_SUCCESS.getCode(), ManagerInfoStatusEnum.LOGIN_SUCCESS.getMessage(), null );
+        if( UserLog.equals( "root" ) )
+            return getResultVOInfo.GetResultVO( ManagerInfoStatusEnum.SUPER_LOGIN_SUCCESS.getCode(), ManagerInfoStatusEnum.SUPER_LOGIN_SUCCESS.getMessage(), null );
 
+        return getResultVOInfo.GetResultVO( ManagerInfoStatusEnum.ORDINARY_LOGIN_SUCCESS.getCode(), ManagerInfoStatusEnum.ORDINARY_LOGIN_SUCCESS.getMessage(), null );
     }
 
     @Override

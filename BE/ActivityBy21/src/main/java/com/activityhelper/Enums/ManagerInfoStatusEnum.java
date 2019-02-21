@@ -18,6 +18,8 @@ public enum ManagerInfoStatusEnum {
     LOGIN_FAILURE( 9, "登录失败" ),
     LOGOUT_SUCEESS( 10, "注销成功" ),
     LOGOUT_FAILURE( 11, "注销失败" ),
+    SUPER_LOGIN_SUCCESS( 12, "超级管理员登录成功" ),
+    ORDINARY_LOGIN_SUCCESS( 13, "普通管理员登录成功" ),
     ;
     private Integer code;
 

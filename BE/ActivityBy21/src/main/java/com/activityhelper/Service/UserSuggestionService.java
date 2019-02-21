@@ -40,9 +40,11 @@ public interface UserSuggestionService {
     ResultVO BackSuggersionGetOne( String userId );
 
     /*后端删除建议*/
-    ResultVO BackSuggersionDelete( String userId );
+    ResultVO BackSuggersionDelete( Integer suggestionId );
 
     /*后端搜寻建议*/
     ResultVO BackSuggestionSearch( String str );
+
+    ResultVO FindOneBysuggestionId( Integer suggestionid );
 
 }

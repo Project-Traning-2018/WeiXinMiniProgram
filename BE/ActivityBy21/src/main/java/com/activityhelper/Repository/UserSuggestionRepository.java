@@ -15,4 +15,6 @@ public interface UserSuggestionRepository extends JpaRepository< UserSuggestion,
     UserSuggestion getUserSuggestionByUserIdIn( String userId );
 
     List< UserSuggestion > findAllBySuggestionContentContaining(String str );
+
+    UserSuggestion getUserSuggestionBySuggestionId( Integer suggestionId );
 }

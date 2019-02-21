@@ -26,15 +26,15 @@ public class UserSuggestionController {
     }
 
     @PostMapping( "/suggestion/getone" )
-    public ResultVO BackSuggersionGetOne(@RequestParam("userId") String userId)
+    public ResultVO BackSuggersionGetOne(@RequestParam("suggestionId") Integer suggestionId )
     {
-        return userSuggestionService.BackSuggersionGetOne( userId );
+        return userSuggestionService.FindOneBysuggestionId( suggestionId );
     }
 
     @PostMapping( "/suggestion/delete" )
-    public ResultVO BackSuggersionDelete(@RequestParam("userId") String userId)
+    public ResultVO BackSuggersionDelete(@RequestParam("suggestionId") Integer suggestionId )
     {
-        return userSuggestionService.BackSuggersionDelete( userId );
+        return userSuggestionService.BackSuggersionDelete( suggestionId );
     }
 
     @PostMapping( "/suggestion/search" )

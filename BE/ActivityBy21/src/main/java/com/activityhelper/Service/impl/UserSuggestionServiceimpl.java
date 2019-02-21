@@ -19,6 +19,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 /**
@@ -61,8 +62,8 @@ public class UserSuggestionServiceimpl implements UserSuggestionService {
     @Transactional
     public void delete(Integer suggestionId)
     {
-
-        userSuggestionRepository.deleteById( suggestionId );
+        UserSuggestion userSuggestion = userSuggestionRepository.getUserSuggestionBySuggestionId( suggestionId );
+        userSuggestionRepository.delete( userSuggestion );
     }
 
     @Override
@@ -134,9 +135,10 @@ public class UserSuggestionServiceimpl implements UserSuggestionService {
     }
 
     @Override
-    public ResultVO BackSuggersionDelete(String userId) {
+    public ResultVO BackSuggersionDelete( Integer suggestionId ) {
 
-        deleteById( userId );
+        delete( suggestionId );
+
         return getResultVOInfo.GetResultVO( BackInfoStausEnum.BACK_SUGGESTION_DELETE_SUCCESS.getCode(), BackInfoStausEnum.BACK_SUGGESTION_DELETE_SUCCESS.getMessage(), null );
     }
 
@@ -144,5 +146,12 @@ public class UserSuggestionServiceimpl implements UserSuggestionService {
     public ResultVO BackSuggestionSearch(String str) {
         List< UserSuggestion > userSuggestionList = userSuggestionRepository.findAllBySuggestionContentContaining( str );
         return getResultVOInfo.GetResultVO( BackInfoStausEnum.BACK_SUGGESTION_SEARCH_SUCCESS.getCode(), BackInfoStausEnum.BACK_SUGGESTION_SEARCH_SUCCESS.getMessage(), userSuggestionList );
+    }
+
+    @Override
+    public ResultVO FindOneBysuggestionId(Integer suggestionid) {
+
+        UserSuggestion userSuggestion = userSuggestionRepository.getUserSuggestionBySuggestionId( suggestionid );
+        return getResultVOInfo.GetResultVO( BackInfoStausEnum.BACK_SUGGESTION_GETONE_SUCCESS.getCode(), BackInfoStausEnum.BACK_SUGGESTION_GETONE_SUCCESS.getMessage(), userSuggestion );
     }
 }
